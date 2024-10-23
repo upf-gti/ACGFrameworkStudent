@@ -1,0 +1,15 @@
+[submodule "libraries/glew-cmake"]
+	path = libraries/glew-cmake
+	url = https://github.com/Perlmint/glew-cmake
+[submodule "libraries/glfw"]
+	path = libraries/glfw
+	url = https://github.com/glfw/glfw
+[submodule "libraries/glm"]
+	path = libraries/glm
+	url = https://github.com/g-truc/glm
+[submodule "libraries/imgui"]
+	path = libraries/imgui
+	url = https://github.com/ocornut/imgui
+[submodule "libraries/easyVDB"]
+	path = libraries/easyVDB
+	url = https://github.com/victorubieto/easyVDB

@@ -5,7 +5,7 @@ project(ACG LANGUAGES C CXX)
 # Directories
 set(DIR_ROOT       ${CMAKE_CURRENT_LIST_DIR})
 set(DIR_SOURCES    "${DIR_ROOT}/src")
-set(DIR_LIBS       "${DIR_ROOT}/libs")
+set(DIR_LIBS       "${DIR_ROOT}/libraries")
 
 # Init with Debug mode
 if (NOT EXISTS ${CMAKE_BINARY_DIR}/CMakeCache.txt)
@@ -95,21 +95,21 @@ if(NOT UNIX)
 endif(NOT UNIX)
 
 # glfw
-add_subdirectory(libs/glfw)
+add_subdirectory(libraries/glfw)
 target_link_libraries(${PROJECT_NAME} PUBLIC glfw)
 set_property(TARGET glfw PROPERTY FOLDER "External/GLFW3")
 set_property(TARGET uninstall PROPERTY FOLDER "External/GLFW3")
 set_property(TARGET update_mappings PROPERTY FOLDER "External/GLFW3")
 
 # glew
-add_subdirectory(libs/glew-cmake)
+add_subdirectory(libraries/glew-cmake)
 add_definitions(-DGLEW_STATIC)
 target_link_libraries(${PROJECT_NAME} PRIVATE libglew_static)
 set_property(TARGET libglew_static PROPERTY FOLDER "External/libglew")
 set_property(TARGET libglew_shared PROPERTY FOLDER "External/libglew")
 
 # glm
-add_subdirectory(libs/glm)
+add_subdirectory(libraries/glm)
 
 target_compile_definitions(glm PUBLIC GLM_ENABLE_EXPERIMENTAL)
 target_compile_definitions(glm PUBLIC GLM_FORCE_QUAT_DATA_XYZW)
@@ -120,7 +120,9 @@ set_property(TARGET glm PROPERTY FOLDER "External/glm")
 target_link_libraries(${PROJECT_NAME} PUBLIC glm)
 
 # easyVDB
-## To do: include the library in the project
+add_subdirectory(libraries/easyVDB)
+target_link_libraries(${PROJECT_NAME} PUBLIC easyVDB)
+set_property(TARGET easyVDB PROPERTY FOLDER "External/easyVDB")
 
 # imgui
 add_library(imgui STATIC
