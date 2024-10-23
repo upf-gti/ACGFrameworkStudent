@@ -78,10 +78,6 @@ set_property(TARGET ${PROJECT_NAME} PROPERTY VS_DEBUGGER_WORKING_DIRECTORY "${DI
 set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD 20)
 set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD_REQUIRED ON)
 
-# OpenMP compiler support
-find_package(OpenMP REQUIRED)
-target_link_libraries(${PROJECT_NAME} PRIVATE OpenMP::OpenMP_CXX)
-
 # Ensure that _AMD64_ or _X86_ are defined on Microsoft Windows, as otherwise
 # um/winnt.h provided since Windows 10.0.22000 will error.
 if(NOT UNIX)
