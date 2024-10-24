@@ -1,4 +1,6 @@
 # Advanced Computer Graphics
+
+## Build Guide:
  
 Clone and initialize the repository:
 ```
