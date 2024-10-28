@@ -10,7 +10,7 @@
 FlatMaterial::FlatMaterial(glm::vec4 color)
 {
 	this->color = color;
-	this->shader = Shader::Get("res/shaders/basic.vs", "res/shaders/flat.fs");
+	this->shader = Shader::Get("../../res/shaders/basic.vs", "../../res/shaders/flat.fs");
 }
 
 FlatMaterial::~FlatMaterial() { }
@@ -49,7 +49,7 @@ void FlatMaterial::renderInMenu()
 WireframeMaterial::WireframeMaterial()
 {
 	this->color = glm::vec4(1.f);
-	this->shader = Shader::Get("res/shaders/basic.vs", "res/shaders/flat.fs");
+	this->shader = Shader::Get("../../res/shaders/basic.vs", "../../res/shaders/flat.fs");
 }
 
 WireframeMaterial::~WireframeMaterial() { }
@@ -78,8 +78,8 @@ void WireframeMaterial::render(Mesh* mesh, glm::mat4 model, Camera* camera)
 StandardMaterial::StandardMaterial(glm::vec4 color)
 {
 	this->color = color;
-	this->base_shader = Shader::Get("res/shaders/basic.vs", "res/shaders/basic.fs");
-	this->normal_shader = Shader::Get("res/shaders/basic.vs", "res/shaders/normal.fs");
+	this->base_shader = Shader::Get("../../res/shaders/basic.vs", "../../res/shaders/basic.fs");
+	this->normal_shader = Shader::Get("../../res/shaders/basic.vs", "../../res/shaders/normal.fs");
 	this->shader = this->base_shader;
 }
 
@@ -136,7 +136,7 @@ void StandardMaterial::render(Mesh* mesh, glm::mat4 model, Camera* camera)
 
 			// do the draw call
 			mesh->render(GL_TRIANGLES);
-
+            
 			first_pass = false;
 		}
 

@@ -6,6 +6,7 @@
 #include "imgui.h"
 #include "backends/imgui_impl_glfw.h"
 #include "backends/imgui_impl_opengl3.h"
+
 #include "ImGuizmo.h"
 
 #include "application.h"
@@ -19,7 +20,7 @@ void renderGUI(GLFWwindow* window, Application* app)
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
 	double xpos, ypos;
 	glfwGetCursorPos(window, &xpos, &ypos);
-
+    
 	assert(window);
 
 	{
@@ -179,7 +180,7 @@ int main(void)
 		return -1;
 
 	/* Create a windowed mode window and its OpenGL context */
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 
 	GLFWwindow* window = glfwCreateWindow(1600, 900, "VDB Viewer", nullptr, nullptr); // 1600, 900 or 1280, 720
@@ -221,7 +222,7 @@ int main(void)
 	ImGui::StyleColorsClassic();
 
 	// Setup Platform/Renderer backends
-	const char* glsl_version = "#version 460";
+	const char* glsl_version = "#version 410";
 	ImGui_ImplGlfw_InitForOpenGL(window, true);
 	ImGui_ImplOpenGL3_Init(glsl_version);
 

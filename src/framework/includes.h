@@ -15,6 +15,10 @@
 	#include <GL/glew.h>
 #endif
 
+#ifdef __APPLE__
+    #include "GL/glew.h"
+#endif
+
 #define GL_GLEXT_PROTOTYPES
 
 #include <GLFW/glfw3.h>

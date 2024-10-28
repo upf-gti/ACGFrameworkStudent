@@ -136,6 +136,7 @@ add_library(imgui STATIC
     ${DIR_LIBS}/imgui/imstb_textedit.h
     ${DIR_LIBS}/imgui/imstb_truetype.h
 )
+set_property(TARGET imgui PROPERTY CXX_STANDARD 20)
 target_link_libraries(imgui PUBLIC glfw libglew_static)
 target_include_directories(imgui PUBLIC ${DIR_LIBS}/imgui)
 target_link_libraries(${PROJECT_NAME} PUBLIC imgui)

@@ -1,4 +1,4 @@
-#version 450 core
+#version 410 core
 
 in vec3 v_position;
 in vec3 v_world_position;
