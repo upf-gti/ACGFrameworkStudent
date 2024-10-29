@@ -181,7 +181,7 @@ int main(void)
 
 	/* Create a windowed mode window and its OpenGL context */
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 
 	GLFWwindow* window = glfwCreateWindow(1600, 900, "Advanced Computer Graphics", nullptr, nullptr); // 1600, 900 or 1280, 720
 	if (!window)
@@ -222,7 +222,7 @@ int main(void)
 	ImGui::StyleColorsClassic();
 
 	// Setup Platform/Renderer backends
-	const char* glsl_version = "#version 410";
+	const char* glsl_version = "#version 330";
 	ImGui_ImplGlfw_InitForOpenGL(window, true);
 	ImGui_ImplOpenGL3_Init(glsl_version);
 

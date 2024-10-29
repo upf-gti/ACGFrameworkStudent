@@ -25,6 +25,7 @@ void Application::init(GLFWwindow* window)
     /* ADD NODES TO THE SCENE */
     SceneNode* example = new SceneNode();
     example->mesh = Mesh::Get("res/meshes/sphere.obj");
+    //example->mesh->createCube();
     example->material = new StandardMaterial();
     this->node_list.push_back(example);
 }
