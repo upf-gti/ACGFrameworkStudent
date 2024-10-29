@@ -130,12 +130,7 @@ void Mesh::enableBuffers(Shader* sh)
 		offset_uv = sizeof(glm::vec3) + sizeof(glm::vec3);
 	}
 
-	//glGenBuffers(1, &vertices_vbo_id);
-	//glBindBuffer(GL_ARRAY_BUFFER, vertices_vbo_id);
-	//glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), &vertices[0], GL_STATIC_DRAW);
-
-	glEnableVertexAttribArray(vertex_location);
-	assert(glGetError() == GL_NO_ERROR);
+	glBindVertexArray(interleaved_vao_id);
 
 	if (vertices_vbo_id || interleaved_vbo_id)
 	{
@@ -144,8 +139,9 @@ void Mesh::enableBuffers(Shader* sh)
 	}
 	else
 		glVertexAttribPointer(vertex_location, 3, GL_FLOAT, GL_FALSE, spacing, interleaved.size() ? &interleaved[0].vertex : &vertices[0]);
-	assert(glGetError() == GL_NO_ERROR);
 	
+	glEnableVertexAttribArray(vertex_location);
+
 	normal_location = -1;
 	if (normals.size() || spacing)
 	{
@@ -247,6 +243,7 @@ void Mesh::enableBuffers(Shader* sh)
 		}
 	}
 
+	glBindVertexArray(0);
 }
 
 void Mesh::render(unsigned int primitive, int submesh_id, int num_instances)
@@ -261,7 +258,7 @@ void Mesh::render(unsigned int primitive, int submesh_id, int num_instances)
 
 	//bind buffers to attribute locations
 	enableBuffers(shader);
-
+	
 	//draw call
 	if (submesh_id == -1 && materials.size() > 0) // if there's mesh mtl
 	{
@@ -280,8 +277,8 @@ void Mesh::render(unsigned int primitive, int submesh_id, int num_instances)
 	}
 	else {
 		drawCall(primitive, submesh_id, 0, num_instances);
+		assert(glGetError() == GL_NO_ERROR);
 	}
-
 	//unbind them
 	disableBuffers(shader);
 }
@@ -328,10 +325,14 @@ void Mesh::drawCall(unsigned int primitive, int submesh_id, int draw_call_id, in
 	}
 	else
 	{
+		glBindVertexArray(interleaved_vao_id);
+
 		if (num_instances > 0)
 			glDrawArraysInstanced(primitive, start, size, num_instances);
 		else
 			glDrawArrays(primitive, start, size);
+
+		glBindVertexArray(0);
 	}
 
 	num_triangles_rendered += static_cast<long>((size / 3) * (num_instances ? num_instances : 1));
@@ -523,6 +524,7 @@ void Mesh::uploadToVRAM()
 		exit(0);
 	}
 
+	glGenVertexArrays(1, &interleaved_vao_id);
 	if (interleaved.size())
 	{
 		// Vertex,Normal,UV
@@ -602,8 +604,6 @@ void Mesh::uploadToVRAM()
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(glm::uvec3), &indices[0], GL_STATIC_DRAW);
 	}
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-
 
 	checkGLErrors();
 
@@ -1268,6 +1268,7 @@ void Mesh::createCube()
 	radius = (float)box.halfsize.length();
 
 	updateBoundingBox();
+	uploadToVRAM();
 }
 
 void Mesh::createWireBox()

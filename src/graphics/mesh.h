@@ -108,6 +108,7 @@ public:
 	unsigned int colors_vbo_id;
 
 	unsigned int indices_vbo_id;
+	unsigned int interleaved_vao_id;
 	unsigned int interleaved_vbo_id;
 	unsigned int bones_vbo_id;
 	unsigned int weights_vbo_id;
