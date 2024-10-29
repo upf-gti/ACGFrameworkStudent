@@ -341,6 +341,7 @@ void Mesh::drawCall(unsigned int primitive, int submesh_id, int draw_call_id, in
 
 void Mesh::disableBuffers(Shader* shader)
 {
+	glBindVertexArray(interleaved_vao_id);
 	glDisableVertexAttribArray(vertex_location);
 	if (normal_location != -1) glDisableVertexAttribArray(normal_location);
 	if (uv_location != -1) glDisableVertexAttribArray(uv_location);
@@ -349,6 +350,7 @@ void Mesh::disableBuffers(Shader* shader)
 	if (bones_location != -1) glDisableVertexAttribArray(bones_location);
 	if (weights_location != -1) glDisableVertexAttribArray(weights_location);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);    //if crashes here, COMMENT THIS LINE ****************************
+	glBindVertexArray(0);
 }
 
 GLuint instances_buffer_id = 0;
