@@ -794,14 +794,14 @@ Shader* Shader::getDefaultShader(std::string name)
 	std::string vs = "";
 	std::string fs = "";
 
-	vs = "#version 410 core in vec3 a_vertex; in vec3 a_normal; in vec2 a_uv; in vec4 a_color; \
+	vs = "attribute vec3 a_vertex; attribute vec3 a_normal; attribute vec2 a_uv; attribute vec4 a_color; \
 	uniform mat4 u_model;\n\
 	uniform mat4 u_viewprojection;\n\
-	out vec3 v_position;\n\
-	out vec3 v_world_position;\n\
-	out vec4 v_color;\n\
-	out vec3 v_normal;\n\
-	out vec2 v_uv;\n\
+	varying vec3 v_position;\n\
+	varying vec3 v_world_position;\n\
+	varying vec4 v_color;\n\
+	varying vec3 v_normal;\n\
+	varying vec2 v_uv;\n\
 	void main()\n\
 	{\n\
 		v_normal = (u_model * vec4(a_normal, 0.0)).xyz;\n\
@@ -814,38 +814,34 @@ Shader* Shader::getDefaultShader(std::string name)
 
 	if (name == "flat")
 	{
-		fs = "#version 410 core uniform vec4 u_color;\n\
-            out vec4 FragColor;\n\
+		fs = "uniform vec4 u_color;\n\
 			void main() {\n\
-				FragColor = u_color;\n\
+				gl_FragColor = u_color;\n\
 			}";
 	}
 	else if (name == "color")
 	{
-		fs = "#version 410 core in vec4 v_color;\n\
+		fs = "varying vec4 v_color;\n\
 			uniform vec4 u_color;\n\
-            out vec4 FragColor;\n\
 			void main() {\n\
-				FragColor = v_color * u_color;\n\
+				gl_FragColor = v_color * u_color;\n\
 			}";
 	}
 	else if (name == "texture")
 	{
-		fs = "#version 410 core uniform vec4 u_color;\n\
+		fs = "uniform vec4 u_color;\n\
 			uniform sampler2D u_texture;\n\
-            out vec4 FragColor;\n\
-			in vec2 v_uv;\n\
+			varying vec2 v_uv;\n\
 			void main() {\n\
-				FragColor = u_color * texture2D(u_texture, v_uv);\n\
+				gl_FragColor = u_color * texture2D(u_texture, v_uv);\n\
 			}";
 	}
 	else if (name == "grid")
 	{
-		fs = "#version 410 core uniform vec4 u_color;\n\
-			in vec4 v_color;\n\
+		fs = "uniform vec4 u_color;\n\
+			varying vec4 v_color;\n\
 			uniform vec3 u_camera_position;\n\
-			in vec3 v_world_position;\n\
-            out vec4 FragColor;\n\
+			varying vec3 v_world_position;\n\
 			void main() {\n\
 				vec4 color = u_color * v_color;\n\
 				color.a *= pow( 1.0 - length(v_world_position.xz - u_camera_position.xz) / 5000.0, 4.5);\n\
@@ -854,87 +850,83 @@ Shader* Shader::getDefaultShader(std::string name)
 				if(v_world_position.z == 0.0)\n\
 					color.xyz = vec3(0.5, 0.5, 1.0);\n\
 				vec3 E = normalize(v_world_position - u_camera_position);\n\
-				FragColor = color;\n\
+				gl_FragColor = color;\n\
 			}";
 	}
 	else if (name == "screen") //draws a quad fullscreen
 	{
-		vs = "#version 410 core in vec3 a_vertex; \
-			out vec2 v_uv;\n\
+		vs = "attribute vec3 a_vertex; \
+			varying vec2 v_uv;\n\
 			void main()\n\
 			{\n\
 				v_uv = a_vertex.xy * 0.5 + vec2(0.5);\n\
 				gl_Position = vec4(a_vertex.xy,0.0,1.0);\n\
 			}";
-		fs = "#version 410 core in vec2 v_uv;\n\
+		fs = "varying vec2 v_uv;\n\
 			uniform sampler2D u_texture;\n\
-            out vec4 FragColor;\n\
 			void main() {\n\
-				FragColor = texture2D( u_texture, v_uv );\n\
+				gl_FragColor = texture2D( u_texture, v_uv );\n\
 			}";
 	}
 	else if (name == "linear_depth")
 	{
-		vs = "#version 410 core in vec3 a_vertex; \
-			out vec2 v_uv;\n\
+		vs = "attribute vec3 a_vertex; \
+			varying vec2 v_uv;\n\
 			void main()\n\
 			{\n\
 				v_uv = a_vertex.xy * 0.5 + vec2(0.5);\n\
 				gl_Position = vec4(a_vertex.xy,0.0,1.0);\n\
 			}";
-		fs = "#version 410 core uniform vec2 u_camera_nearfar;\n\
+		fs = "uniform vec2 u_camera_nearfar;\n\
 		uniform sampler2D u_texture; //depth map\n\
-		in vec2 v_uv;\n\
-        out vec4 FragColor;\n\
+		varying vec2 v_uv;\n\
 		void main()\n\
 		{\n\
 			float n = u_camera_nearfar.x;\n\
 			float f = u_camera_nearfar.y;\n\
 			float z = texture2D(u_texture, v_uv).x;\n\
 			float color = n * (z + 1.0) / (f + n - z * (f - n));\n\
-			FragColor = vec4(color);\n\
+			gl_FragColor = vec4(color);\n\
 		}";
 	}
 	else if (name == "screen_depth") //draws a quad fullscreen and clones its depth
 	{
-		vs = "#version 410 core in vec3 a_vertex; \
-			out vec2 v_uv;\n\
+		vs = "attribute vec3 a_vertex; \
+			varying vec2 v_uv;\n\
 			void main()\n\
 			{\n\
 				v_uv = a_vertex.xy * 0.5 + vec2(0.5);\n\
 				gl_Position = vec4(a_vertex.xy,0.0,1.0);\n\
 			}";
-		fs = "#version 410 core in vec2 v_uv;\n\
+		fs = "varying vec2 v_uv;\n\
 			uniform sampler2D u_texture;\n\
-            out vec4 FragColor;\n\
 			void main() {\n\
 				vec4 color = texture2D( u_texture, v_uv );\n\
-				FragColor = color;\n\
+				gl_FragColor = color;\n\
 				gl_FragDepth = color.r * 2.0 - 1.0;\n\
 			}";
 	}
 	else if (name == "quad" || name == "textured_quad") //draws a quad
 	{
-		vs = "#version 410 core in vec3 a_vertex;\n\
+		vs = "attribute vec3 a_vertex;\n\
 			uniform vec4 u_pos_size;\n\
-			out vec2 v_uv;\n\
+			varying vec2 v_uv;\n\
 			void main()\n\
 			{\n\
 				v_uv = vec2( a_vertex.x, 1.0 - a_vertex.y );\n\
 				gl_Position = vec4( a_vertex.xy * u_pos_size.zw + u_pos_size.xy,0.0,1.0);\n\
 			}";
 		if (name == "textured_quad")
-			fs = "#version 410 core in vec2 v_uv;\n\
+			fs = "varying vec2 v_uv;\n\
 			uniform vec4 u_color;\n\
 			uniform sampler2D u_texture;\n\
-            out vec4 FragColor;\n\
 			void main() {\n\
-				FragColor = u_color * texture2D( u_texture, v_uv );\n\
+				gl_FragColor = u_color * texture2D( u_texture, v_uv );\n\
 			}";
 		else
-			fs = "#version 410 core uniform vec4 u_color; out vec4 FragColor;\n\
+			fs = "uniform vec4 u_color;\n\
 			void main() {\n\
-				FragColor = u_color;\n\
+				gl_FragColor = u_color;\n\
 			}";
 	}
 	else

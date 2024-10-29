@@ -180,10 +180,10 @@ int main(void)
 		return -1;
 
 	/* Create a windowed mode window and its OpenGL context */
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 
-	GLFWwindow* window = glfwCreateWindow(1600, 900, "VDB Viewer", nullptr, nullptr); // 1600, 900 or 1280, 720
+	GLFWwindow* window = glfwCreateWindow(1600, 900, "Advanced Computer Graphics", nullptr, nullptr); // 1600, 900 or 1280, 720
 	if (!window)
 	{
 		glfwTerminate();

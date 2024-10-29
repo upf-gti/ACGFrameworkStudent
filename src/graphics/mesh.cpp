@@ -115,8 +115,8 @@ void Mesh::enableBuffers(Shader* sh)
 {
 	vertex_location = sh->getAttribLocation("a_vertex");
 	assert(vertex_location != -1 && "No a_vertex found in shader");
-    
-    if (vertex_location == -1)
+
+	if (vertex_location == -1)
 		return;
 
 	int spacing = 0;
@@ -129,9 +129,9 @@ void Mesh::enableBuffers(Shader* sh)
 		offset_normal = sizeof(glm::vec3);
 		offset_uv = sizeof(glm::vec3) + sizeof(glm::vec3);
 	}
-    assert(glGetError() == GL_NO_ERROR);
+
 	glEnableVertexAttribArray(vertex_location);
-    assert(glGetError() == GL_NO_ERROR);
+
 	if (vertices_vbo_id || interleaved_vbo_id)
 	{
 		glBindBuffer(GL_ARRAY_BUFFER, interleaved_vbo_id ? interleaved_vbo_id : vertices_vbo_id);
@@ -139,7 +139,7 @@ void Mesh::enableBuffers(Shader* sh)
 	}
 	else
 		glVertexAttribPointer(vertex_location, 3, GL_FLOAT, GL_FALSE, spacing, interleaved.size() ? &interleaved[0].vertex : &vertices[0]);
-    
+
 	normal_location = -1;
 	if (normals.size() || spacing)
 	{
@@ -156,7 +156,7 @@ void Mesh::enableBuffers(Shader* sh)
 				glVertexAttribPointer(normal_location, 3, GL_FLOAT, GL_FALSE, spacing, interleaved.size() ? &interleaved[0].normal : &normals[0]);
 		}
 	}
-    
+
 	uv_location = -1;
 	if (uvs.size() || spacing)
 	{
@@ -255,7 +255,7 @@ void Mesh::render(unsigned int primitive, int submesh_id, int num_instances)
 
 	//bind buffers to attribute locations
 	enableBuffers(shader);
-    assert(glGetError() == GL_NO_ERROR);
+
 	//draw call
 	if (submesh_id == -1 && materials.size() > 0) // if there's mesh mtl
 	{
