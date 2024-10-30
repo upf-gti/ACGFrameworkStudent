@@ -2,7 +2,7 @@
 
 ## Build Guide:
  
-Clone and initialize the repository:
+Clone and initialize the repository (you can do it via [Git](https://git-scm.com/downloads/win) or using [GitHub Desktop](https://desktop.github.com/download/)):
 ```
 git clone --recurse-submodules -j8 https://github.com/upf-gti/ACGFrameworkStudent.git
 ```
@@ -32,6 +32,16 @@ cmake ..
 
 This will generate a Visual Studio project inside the folder ``build/`` (.sln) that you can use to compile and debug the framework.
 
+### How to solve errors in Windows build
+
+> [!Caution]
+> CMake: The C Compiler is not able to compile a simple test program
+
+This may happens because the path of the project is too long. Try to clone the project in a less deep directory and build again. If the error persist, open the file CMakeLists.txt and add the following code in the second line of the file:
+```console
+set(CMAKE_TRY_COMPILE_TARGET_TYPE "STATIC_LIBRARY")
+```
+
 ## Mac
 
 You need XCode installed in your system (you may need to update MacOS version), Homebrew to install the missing libraries and also *CMake*. 
@@ -54,10 +64,22 @@ cmake -G "Xcode" ..
 
 This will generate a XCode project inside the folder ``build/`` that you can use to compile and debug the framework.
 
-If this process leads to cmake errors, run this command an try again:
+### How to solve errors in Mac build
 
+If this process leads to cmake errors, run this command an try again:
 ```console
 sudo xcode-select --reset
+```
+
+If the error says that it cannot find C/C++ compilers, find them using:
+```console
+xcrun -find c++
+xcrun -find cc
+```
+
+Then, try to build again (inside the build directory) specifying the paths:
+```console
+cmake -D CMAKE_C_COMPILER="<Path_of_C_compiler>" -D CMAKE_CXX_COMPILER="<Path_of_C++_compiler>" -G Xcode ..
 ```
 
 ## Linux
