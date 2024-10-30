@@ -23,7 +23,7 @@ void Application::init(GLFWwindow* window)
     this->ambient_light = glm::vec4(0.75f, 0.75f, 0.75f, 1.f);
 
     /* ADD NODES TO THE SCENE */
-    SceneNode* example = new SceneNode();
+    SceneNode* example = new SceneNode("Example Node");
     example->mesh = Mesh::Get("res/meshes/sphere.obj");
     example->material = new StandardMaterial();
     this->node_list.push_back(example);

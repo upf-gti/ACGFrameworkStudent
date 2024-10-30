@@ -78,7 +78,7 @@ void WireframeMaterial::render(Mesh* mesh, glm::mat4 model, Camera* camera)
 StandardMaterial::StandardMaterial(glm::vec4 color)
 {
 	this->color = color;
-	this->base_shader = Shader::Get("res/shaders/basic.vs", "res/shaders/flat.fs");
+	this->base_shader = Shader::Get("res/shaders/basic.vs", "res/shaders/basic.fs");
 	this->normal_shader = Shader::Get("res/shaders/basic.vs", "res/shaders/normal.fs");
 	this->shader = this->base_shader;
 }
