@@ -64,6 +64,8 @@ cmake -G "Xcode" ..
 
 This will generate a XCode project inside the folder ``build/`` that you can use to compile and debug the framework.
 
+Lastly, it is likely to fail to compile because of XCode. You need to change the path to the assets from ``"res/meshes/sphere.obj"`` to ``"../../res/meshes/sphere.obj"``.
+
 ### How to solve errors in Mac build
 
 If this process leads to cmake errors, run this command an try again:
