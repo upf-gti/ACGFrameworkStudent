@@ -140,7 +140,7 @@ void mainLoop(GLFWwindow* window)
 	double prev_frame_time = 0.0;
 	double xpos, ypos; // mouse position vars
 
-	/* Loop until the user closes the window */
+	// Loop until the user closes the window
 	while (!glfwWindowShouldClose(window))
 	{
 		glfwGetFramebufferSize(window, &width, &height);
@@ -173,7 +173,7 @@ void mainLoop(GLFWwindow* window)
 
 		renderGUI(window, app);
 		
-		/* Swap front and back buffers */
+		// Swap front and back buffers
 		glfwSwapBuffers(window);
 
 		ImGui::EndFrame();
@@ -182,32 +182,32 @@ void mainLoop(GLFWwindow* window)
 
 int main(void) 
 {
-	/* Glfw (Window API) */
+	// Glfw (Window API)
 	if (!glfwInit())
 		return -1;
 
-	/* Create a windowed mode window and its OpenGL context */
+	// Create a windowed mode window and its OpenGL context
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 
-	GLFWwindow* window = glfwCreateWindow(1600, 900, "Advanced Computer Graphics 25-26", nullptr, nullptr); // 1600, 900 or 1280, 720
+	GLFWwindow* window = glfwCreateWindow(1600, 900, "Advanced Computer Graphics 25-26", nullptr, nullptr);
 	if (!window)
 	{
 		glfwTerminate();
 		return -1;
 	}
 
-	/* Make the window's context current */
+	// Make the window's context current
 	glfwMakeContextCurrent(window);
-	glfwSwapInterval(1); // Enable vsync
+	glfwSwapInterval(1); // enable vsync
 
-	/* Glew (OpenGL API) */
+	// Glew (OpenGL API)
 	if (glewInit() != GLEW_OK)
 		std::cout << "[Error] GLEW not initialized" << std::endl;
 	fprintf(stdout, "[Info] Using GLEW %s\n", glewGetString(GLEW_VERSION));
 
-	// get version info
-	const GLubyte* renderer = glGetString(GL_RENDERER); // get renderer string
+	// Get version info
+	const GLubyte* renderer = glGetString(GL_RENDERER); // renderer as a string
 	const GLubyte* version = glGetString(GL_VERSION); // version as a string
 	printf("\n[Info] Renderer %s", renderer);
 	printf("\n[Info] OpenGL version supported %s\n\n", version);
@@ -224,8 +224,8 @@ int main(void)
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
-	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard; // Enable Keyboard Controls
-	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad; // Enable Gamepad Controls
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard; // enable keyboard controls
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad; // enable gamepad controls
 	// Setup Dear ImGui style
 	ImGui::StyleColorsClassic();
 
