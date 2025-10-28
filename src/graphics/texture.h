@@ -25,7 +25,7 @@ public:
 	bool origin_topleft;
 	uint8_t* data; //bytes with the pixel information
 
-	Image() { width = height = 0; data = NULL; bytes_per_pixel = 3; }
+	Image() { width = height = 0; data = NULL; bytes_per_pixel = 3; origin_topleft = false; }
 	Image(int w, int h, int bytes_per_pixel = 3) { data = NULL; resize(w, h, bytes_per_pixel); }
 	~Image() { if (data) delete[]data; data = NULL; }
 
@@ -41,7 +41,7 @@ public:
 	void setPixel(int x, int y, glm::vec4 v) {
 		assert(x >= 0 && x < (int)width && y >= 0 && y < (int)height && "writing of memory");
 		int pos = y * width * bytes_per_pixel + x * bytes_per_pixel;
-		data[pos] = v.x; data[pos + 1] = v.y; data[pos + 2] = v.z; if (bytes_per_pixel == 4) data[pos + 3] = v.w;
+		data[pos] = (uint8_t)v.x; data[pos + 1] = (uint8_t)v.y; data[pos + 2] = (uint8_t)v.z; if (bytes_per_pixel == 4) data[pos + 3] = (uint8_t)v.w;
 	};
 
 	glm::vec4 getPixelInterpolated(float x, float y, bool repeat = false);

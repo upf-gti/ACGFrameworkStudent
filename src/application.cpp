@@ -143,19 +143,19 @@ void Application::onMousePosition(double xpos, double ypos) { }
 
 void Application::onScroll(double xOffset, double yOffset)
 {
-    int min = this->camera->min_fov;
-    int max = this->camera->max_fov;
+    int min = (int)this->camera->min_fov;
+    int max = (int)this->camera->max_fov;
 
     if (yOffset < 0) {
         this->camera->fov += 4.f;
         if (this->camera->fov > max) {
-            this->camera->fov = max;
+            this->camera->fov = (float)max;
         }
     }
     else {
         this->camera->fov -= 4.f;
         if (this->camera->fov < min) {
-            this->camera->fov = min;
+            this->camera->fov = (float)min;
         }
     }
     this->camera->updateProjectionMatrix();

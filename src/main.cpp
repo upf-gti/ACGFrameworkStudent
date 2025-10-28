@@ -155,7 +155,7 @@ void mainLoop(GLFWwindow* window)
 		double curr_time = glfwGetTime();
 		double delta_time = curr_time - prev_frame_time;
 		prev_frame_time = curr_time;
-		app->update(delta_time);
+		app->update((float)delta_time);
 
 		if (app->close) break;
 

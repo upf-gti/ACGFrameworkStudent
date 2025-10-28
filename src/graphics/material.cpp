@@ -108,7 +108,7 @@ void StandardMaterial::render(Mesh* mesh, glm::mat4 model, Camera* camera)
 		this->shader->enable();
 
 		// Multi pass render
-		int num_lights = Application::instance->light_list.size();
+		int num_lights = (int)Application::instance->light_list.size();
 		for (int nlight = -1; nlight < num_lights; nlight++)
 		{
 			if (nlight == -1) { nlight++; } // hotfix

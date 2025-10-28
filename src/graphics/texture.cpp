@@ -12,8 +12,8 @@
 
 //bilinear interpolation
 glm::vec4 Image::getPixelInterpolated(float x, float y, bool repeat) {
-	int ix = repeat ? fmod(x, width) : std::clamp((int)x, 0, width - 1);
-	int iy = repeat ? fmod(y, height) : std::clamp((int)y, 0, height - 1);
+	int ix = repeat ? (int)fmod(x, width) : std::clamp((int)x, 0, width - 1);
+	int iy = repeat ? (int)fmod(y, height) : std::clamp((int)y, 0, height - 1);
 	if (ix < 0) ix += width;
 	if (iy < 0) iy += height;
 	float fx = (x - (int)x);
@@ -26,8 +26,8 @@ glm::vec4 Image::getPixelInterpolated(float x, float y, bool repeat) {
 };
 
 glm::vec4 Image::getPixelInterpolatedHigh(float x, float y, bool repeat) {
-	int ix = repeat ? fmod(x, width) : std::clamp((int)x, 0, width - 1);
-	int iy = repeat ? fmod(y, height) : std::clamp((int)y, 0, height - 1);
+	int ix = repeat ? (int)fmod(x, width) : std::clamp((int)x, 0, width - 1);
+	int iy = repeat ? (int)fmod(y, height) : std::clamp((int)y, 0, height - 1);
 	if (ix < 0) ix += width;
 	if (iy < 0) iy += height;
 	float fx = (x - (int)x);
@@ -118,7 +118,7 @@ void Texture::create3D(unsigned int width, unsigned int height, unsigned int dep
 	this->format = format;
 	this->internal_format = internal_format;
 	this->type = type;
-	this->mipmaps = mipmaps && isPowerOfTwo(width) && isPowerOfTwo(height) && format != GL_DEPTH_COMPONENT && isPowerOfTwo(this->depth);
+	this->mipmaps = mipmaps && isPowerOfTwo(width) && isPowerOfTwo(height) && format != GL_DEPTH_COMPONENT && isPowerOfTwo((int)this->depth);
 
 	//Delete previous texture and ensure that previous bounded texture_id is not of another texture type
 	if (this->texture_id != 0)

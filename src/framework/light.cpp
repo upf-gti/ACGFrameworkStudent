@@ -58,7 +58,7 @@ void Light::renderInMenu()
 
 	ImGui::SliderFloat("Intensity", (float*)&this->intensity, 0.f, 50.f);
 	ImGui::SliderFloat("Shininess", (float*)&this->shininess, 0.f, 30.f);
-	if (ImGui::ColorEdit3("Color", (float*)&this->color));
+	ImGui::ColorEdit3("Color", (float*)&this->color);
 
 	ImGui::SliderFloat3("Direction", (float*)&front.x, -0.99f, 0.99f);
 	ImGui::SliderFloat("Max Distance", (float*)&this->max_distance, 0.f, 1000.f);

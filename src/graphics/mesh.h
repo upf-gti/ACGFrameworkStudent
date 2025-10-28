@@ -24,7 +24,7 @@ class BoundingBox
 public:
 	glm::vec3 center;
 	glm::vec3 halfsize;
-	BoundingBox() {};
+	BoundingBox() { this->center = glm::vec3(0.f); this->halfsize = glm::vec3(0.5f); };
 	BoundingBox(glm::vec3 center, glm::vec3 halfsize) { this->center = center; this->halfsize = halfsize; };
 };
 

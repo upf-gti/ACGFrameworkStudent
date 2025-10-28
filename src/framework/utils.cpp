@@ -18,7 +18,7 @@
 long getTime()
 {
 	#ifdef _WIN32
-		return GetTickCount();
+		return (long)GetTickCount64();
 	#else
 		struct timeval tv;
 		gettimeofday(&tv, NULL);
@@ -148,7 +148,7 @@ bool readFile(const std::string& filename, std::string& content)
 	content.resize(count);
 	if (count > 0)
 	{
-		count = fread(&content[0], sizeof(char), count, fp);
+		count = (long)fread(&content[0], sizeof(char), count, fp);
 	}
 	fclose(fp);
 
@@ -333,7 +333,7 @@ void drawGrid()
 	Shader* grid_shader = Shader::getDefaultShader("grid");
 	grid_shader->enable();
 	glm::mat4 m = glm::mat4(1.f);
-	m[0][3] = floor(Camera::current->eye.x / 100.0) * 100.0f;
+	m[0][3] = floor(Camera::current->eye.x / 100.0f) * 100.0f;
 	m[1][3] = 0.0f;
 	m[2][3] = floor(Camera::current->eye.z / 100.0f) * 100.0f; // glm::translate(glm::vec3(floor(Camera::current->eye.x / 100.0) * 100.0f, 0.0f, floor(Camera::current->eye.z / 100.0f) * 100.0f));
 	grid_shader->setUniform("u_color", glm::vec4(0.7, 0.7, 0.7, 0.7));
@@ -361,7 +361,7 @@ char* fetchFloat(char* data, float& v)
 {
 	char w[255];
 	data = fetchWord(data, w);
-	v = atof(w);
+	v = (float)atof(w);
 	return data;
 }
 
@@ -373,7 +373,7 @@ char* fetchMatrix44(char* data, glm::mat4& m)
 		data = fetchWord(data, word);
 		//m.m[i] = atof(word);
 		float* mValues = (float*)glm::value_ptr(m);
-		mValues[i] = atof(word);
+		mValues[i] = (float)atof(word);
 	}
 	return data;
 }
@@ -395,9 +395,9 @@ char* fetchBufferFloat(char* data, std::vector<float>& vector, int num)
 	else //read size with the first number
 	{
 		data = fetchWord(data, word);
-		float v = atof(word);
+		float v = (float)atof(word);
 		assert(v);
-		vector.resize(v);
+		vector.resize((size_t)v);
 	}
 
 	int index = 0;
@@ -410,7 +410,7 @@ char* fetchBufferFloat(char* data, std::vector<float>& vector, int num)
 				continue;
 			}
 			word[pos] = 0;
-			float v = atof(word);
+			float v = (float)atof(word);
 			vector[index++] = v;
 			if (*data == '\n' || *data == 0)
 			{
