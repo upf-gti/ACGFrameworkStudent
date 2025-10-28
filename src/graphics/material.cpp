@@ -61,13 +61,13 @@ void WireframeMaterial::render(Mesh* mesh, glm::mat4 model, Camera* camera)
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		glDisable(GL_CULL_FACE);
 
-		//enable shader
+		// Enable shader
 		this->shader->enable();
 
-		//upload material specific uniforms
+		// Upload material specific uniforms
 		setUniforms(camera, model);
 
-		//do the draw call
+		// Do the draw call
 		mesh->render(GL_TRIANGLES);
 
 		glEnable(GL_CULL_FACE);
@@ -87,7 +87,7 @@ StandardMaterial::~StandardMaterial() { }
 
 void StandardMaterial::setUniforms(Camera* camera, glm::mat4 model)
 {
-	//upload node uniforms
+	// Upload node uniforms
 	this->shader->setUniform("u_viewprojection", camera->viewprojection_matrix);
 	this->shader->setUniform("u_camera_position", camera->eye);
 	this->shader->setUniform("u_model", model);
@@ -104,7 +104,7 @@ void StandardMaterial::render(Mesh* mesh, glm::mat4 model, Camera* camera)
 	bool first_pass = true;
 	if (mesh && this->shader)
 	{
-		// enable shader
+		// Enable shader
 		this->shader->enable();
 
 		// Multi pass render
@@ -113,10 +113,10 @@ void StandardMaterial::render(Mesh* mesh, glm::mat4 model, Camera* camera)
 		{
 			if (nlight == -1) { nlight++; } // hotfix
 
-			// upload uniforms
+			// Upload uniforms
 			setUniforms(camera, model);
 
-			// upload light uniforms
+			// Upload light uniforms
 			if (!first_pass) {
 				glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 				glDepthFunc(GL_LEQUAL);
@@ -134,13 +134,13 @@ void StandardMaterial::render(Mesh* mesh, glm::mat4 model, Camera* camera)
 				this->shader->setUniform("u_light_color", glm::vec4(0.f));
 			}
 
-			// do the draw call
+			// Do the draw call
 			mesh->render(GL_TRIANGLES);
             
 			first_pass = false;
 		}
 
-		// disable shader
+		// Disable shader
 		this->shader->disable();
 	}
 }

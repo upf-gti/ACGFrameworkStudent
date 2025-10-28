@@ -15,7 +15,7 @@ void Application::init(GLFWwindow* window)
     // Create camera
     this->camera = new Camera();
     this->camera->lookAt(glm::vec3(1.f, 1.5f, 4.f), glm::vec3(0.f, 0.0f, 0.f), glm::vec3(0.f, 1.f, 0.f));
-    this->camera->setPerspective(60.f, this->window_width / (float)this->window_height, 0.1f, 500.f); // set the projection, we want to be perspective
+    this->camera->setPerspective(60.f, this->window_width / (float)this->window_height, 0.1f, 500.f); // set the projection to perspective
 
     this->flag_grid = true;
     this->flag_wireframe = false;
@@ -31,7 +31,7 @@ void Application::init(GLFWwindow* window)
 
 void Application::update(float dt)
 {
-    // mouse update
+    // Mouse update
     glm::vec2 delta = this->lastMousePosition - this->mousePosition;
     if (this->dragging) {
         this->camera->orbit(-delta.x * dt, delta.y * dt);
@@ -41,13 +41,13 @@ void Application::update(float dt)
 
 void Application::render()
 {
-    // set the clear color (the background color)
+    // Set the clear color (the background color)
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 
     // Clear the window and the depth buffer
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    // set flags
+    // Set flags
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
 
@@ -158,5 +158,12 @@ void Application::onScroll(double xOffset, double yOffset)
             this->camera->fov = min;
         }
     }
+    this->camera->updateProjectionMatrix();
+}
+
+void Application::onWindowSize(int width, int height)
+{
+    glViewport(0, 0, width, height);
+    this->camera->setAspectRatio(width / (float)height);
     this->camera->updateProjectionMatrix();
 }

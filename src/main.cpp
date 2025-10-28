@@ -126,6 +126,13 @@ void onScrollEvent(GLFWwindow* window, double xoffset, double yoffset)
 	}
 }
 
+void onWindowSizeEvent(GLFWwindow* window, int width, int height)
+{
+	if (app != 0) {
+		app->onWindowSize(width, height);
+	}
+}
+
 void mainLoop(GLFWwindow* window) 
 {
 	int32_t width, height;
@@ -183,7 +190,7 @@ int main(void)
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 
-	GLFWwindow* window = glfwCreateWindow(1600, 900, "Advanced Computer Graphics", nullptr, nullptr); // 1600, 900 or 1280, 720
+	GLFWwindow* window = glfwCreateWindow(1600, 900, "Advanced Computer Graphics 25-26", nullptr, nullptr); // 1600, 900 or 1280, 720
 	if (!window)
 	{
 		glfwTerminate();
@@ -197,13 +204,13 @@ int main(void)
 	/* Glew (OpenGL API) */
 	if (glewInit() != GLEW_OK)
 		std::cout << "[Error] GLEW not initialized" << std::endl;
-	fprintf(stdout, "[INFO] Using GLEW %s\n", glewGetString(GLEW_VERSION));
+	fprintf(stdout, "[Info] Using GLEW %s\n", glewGetString(GLEW_VERSION));
 
 	// get version info
 	const GLubyte* renderer = glGetString(GL_RENDERER); // get renderer string
 	const GLubyte* version = glGetString(GL_VERSION); // version as a string
-	printf("\n[INFO] Renderer %s", renderer);
-	printf("\n[INFO] OpenGL version supported %s\n\n", version);
+	printf("\n[Info] Renderer %s", renderer);
+	printf("\n[Info] OpenGL version supported %s\n\n", version);
 	fflush(stdout);
 
 	// Bind event callbacks
@@ -211,6 +218,7 @@ int main(void)
 	glfwSetMouseButtonCallback(window, onMouseEvent);
 	glfwSetCursorPosCallback(window, onCursorEvent);
 	glfwSetScrollCallback(window, onScrollEvent);
+	glfwSetWindowSizeCallback(window, onWindowSizeEvent);
 
 	// Setup Dear ImGui context
 	IMGUI_CHECKVERSION();

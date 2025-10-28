@@ -44,4 +44,5 @@ public:
 	void onMiddleMouseUp();
 	void onMousePosition(double xpos, double ypos);
 	void onScroll(double xOffset, double yOffset);
+	void onWindowSize(int width, int height);
 };
