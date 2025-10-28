@@ -88,7 +88,7 @@ bool Shader::load(const std::string& vsf, const std::string& psf, const char* ma
 
 	bool printMacros = false;
 
-	std::cout << " + Shader: Vertex: " << vsf << "  Pixel: " << psf << "  " << (macros && printMacros ? macros : "") << std::endl;
+	std::cout << " + Shader loading: Vertex: " << vsf << "  Pixel: " << psf << "  " << (macros && printMacros ? macros : "") << std::endl;
 	std::string vsm, psm;
 	if (!readFile(vsf, vsm) || !readFile(psf, psm))
 		return false;

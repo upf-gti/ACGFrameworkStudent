@@ -771,18 +771,18 @@ bool Mesh::readBin(const char* filename)
 		pos += sizeof(sSubmeshInfo) * info.num_submeshes;
 	}
 
-	// if the mtl is not specified in the obj but it's needed
-	if (!materials.size()) {
-		std::string mesh_name = filename;
-		mesh_name = mesh_name.substr(0, mesh_name.size() - 5);
+	//// if the mtl is not specified in the obj but it's needed
+	//if (!materials.size()) {
+	//	std::string mesh_name = filename;
+	//	mesh_name = mesh_name.substr(0, mesh_name.size() - 5);
 
-		std::string ext = mesh_name.substr(mesh_name.find_last_of(".") + 1);
-		if (ext == "obj" || ext == "OBJ") {
-			replace(mesh_name, ".obj", ".mtl");
-			if (!parseMTL(mesh_name.c_str()))
-				std::cerr << "MTL file not found: " << mesh_name.c_str() << std::endl;
-		}
-	}
+	//	std::string ext = mesh_name.substr(mesh_name.find_last_of(".") + 1);
+	//	if (ext == "obj" || ext == "OBJ") {
+	//		replace(mesh_name, ".obj", ".mtl");
+	//		if (!parseMTL(mesh_name.c_str()))
+	//			std::cerr << "MTL file not found: " << mesh_name.c_str() << std::endl;
+	//	}
+	//}
 
 	//createCollisionModel();
 	return true;
