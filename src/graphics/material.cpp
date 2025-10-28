@@ -6,7 +6,6 @@
 #include <fstream>
 #include <algorithm>
 
-
 FlatMaterial::FlatMaterial(glm::vec4 color)
 {
 	this->color = color;
@@ -43,6 +42,8 @@ void FlatMaterial::render(Mesh* mesh, glm::mat4 model, Camera* camera)
 
 void FlatMaterial::renderInMenu()
 {
+	ImGui::Text("Material Type: %s", std::string("Flat").c_str());
+
 	ImGui::ColorEdit3("Color", (float*)&this->color);
 }
 
@@ -147,6 +148,8 @@ void StandardMaterial::render(Mesh* mesh, glm::mat4 model, Camera* camera)
 
 void StandardMaterial::renderInMenu()
 {
+	ImGui::Text("Material Type: %s", std::string("Standard").c_str());
+
 	if (ImGui::Checkbox("Show Normals", &this->show_normals)) {
 		if (this->show_normals) {
 			this->shader = this->normal_shader;

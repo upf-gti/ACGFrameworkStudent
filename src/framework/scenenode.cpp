@@ -40,6 +40,8 @@ void SceneNode::renderWireframe(Camera* camera)
 
 void SceneNode::renderInMenu()
 {
+	ImGui::Text("Node Type: %s", typeToString(this->type).c_str());
+
 	// Model edit
 	if (ImGui::TreeNode("Model")) 
 	{

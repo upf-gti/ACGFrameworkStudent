@@ -1,5 +1,6 @@
 #pragma once
 
+#include <map>
 #include <glm/matrix.hpp>
 
 #include "camera.h"
@@ -10,6 +11,12 @@
 
 class Light;
 enum eType { NODE_BASE, NODE_VOLUME, NODE_LIGHT };
+
+inline std::map<eType, std::string> enumToString = { { NODE_BASE, "Base" }, { NODE_VOLUME, "Volume" }, { NODE_LIGHT, "Light" } };
+inline std::string typeToString(eType type)
+{
+	return enumToString[type];
+}
 
 class SceneNode {
 public:
