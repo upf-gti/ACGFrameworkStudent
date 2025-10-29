@@ -96,7 +96,7 @@ void StandardMaterial::setUniforms(Camera* camera, glm::mat4 model)
 	this->shader->setUniform("u_color", this->color);
 
 	if (this->texture) {
-		this->shader->setUniform("u_texture", this->texture);
+		this->shader->setUniform("u_texture", this->texture, 0);
 	}
 }
 
