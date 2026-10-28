@@ -20,14 +20,14 @@ include(FetchContent)
 # download imguizmo
 FetchContent_Declare(
     imguizmo_h
-    URL https://raw.githubusercontent.com/CedricGuillemet/ImGuizmo/master/ImGuizmo.h
+    URL https://raw.githubusercontent.com/CedricGuillemet/ImGuizmo/master/src/ImGuizmo.h
     DOWNLOAD_DIR ${DIR_LIBS}/imguizmo
     DOWNLOAD_NO_EXTRACT TRUE
 )
 
 FetchContent_Declare(
     imguizmo_cpp
-    URL https://raw.githubusercontent.com/CedricGuillemet/ImGuizmo/master/ImGuizmo.cpp
+    URL https://raw.githubusercontent.com/CedricGuillemet/ImGuizmo/master/src/ImGuizmo.cpp
     DOWNLOAD_DIR ${DIR_LIBS}/imguizmo
     DOWNLOAD_NO_EXTRACT TRUE
 )
