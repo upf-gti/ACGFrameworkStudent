@@ -44,45 +44,57 @@ set(CMAKE_TRY_COMPILE_TARGET_TYPE "STATIC_LIBRARY")
 
 ## Mac
 
-You need XCode installed in your system (you may need to update MacOS version), Homebrew to install the missing libraries and also *CMake*. 
-
-To install Homebrew open a terminal and run this command:
+1. Install XCode (you may need to update MacOS version)
+2. Install Homebrew (to install the missing libraries). Open a terminal and run this command:
 ```console
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 ```
-
-Continue by installing *cmake* using this command:
+3. Install *CMake*:
 ```console
 brew install cmake
 ```
 
-Once you have all required open a MacOS Terminal, go to the project folder and do this steps:
+#### Configure the project: <br>
+Open a MacOS Terminal, go to the project folder, and run:
 ```console
+cd ACGFrameworkStudent
 mkdir build && cd build
-cmake -G "Xcode" ..
+cmake .. -G "Xcode" -DCMAKE_POLICY_VERSION_MINIMUM="3.12"
 ```
 
-This will generate a XCode project inside the folder ``build/`` that you can use to compile and debug the framework.
+Double click on the ``.xcodeproj`` Xcode project inside the ``build/`` folder.
 
-Lastly, it is likely to fail to compile because of XCode. You need to change the path to the assets from ``"res/meshes/sphere.obj"`` to ``"../../res/meshes/sphere.obj"``.
+You are all set!
 
 ### How to solve errors in Mac build
+#### *CMake* fails
+1. Run this command an try again:
+   ```console
+   sudo xcode-select --reset
+   ```
 
-If this process leads to cmake errors, run this command an try again:
-```console
-sudo xcode-select --reset
-```
+#### Cannot find C/C++ compilers
+1. Find them using:
+   ```console
+   xcrun -find c++
+   xcrun -find cc
+   ```
 
-If the error says that it cannot find C/C++ compilers, find them using:
-```console
-xcrun -find c++
-xcrun -find cc
-```
+2. Then, try to build again (inside the build directory) specifying the paths:
+   ```console
+   cmake -D CMAKE_C_COMPILER="Path_of_C_compiler" -D CMAKE_CXX_COMPILER="Path_of_C++_compiler" -G Xcode ..
+   ```
 
-Then, try to build again (inside the build directory) specifying the paths:
-```console
-cmake -D CMAKE_C_COMPILER="<Path_of_C_compiler>" -D CMAKE_CXX_COMPILER="<Path_of_C++_compiler>" -G Xcode ..
-```
+#### Xcode compilation error "AGL Framework not found"
+
+1. Open the "libraries/glew-cmake/CMakeLists.txt" file
+2. Comment/Delete lines 113 & 114
+   ```console
+   find_library(AGL_LIBRARY AGL REQUIRED)
+   list(APPEND LIBRARIES ${AGL_LIBRARY})
+   ```
+4. Execute the ``cmake`` command again
+
 
 ## Linux
 
