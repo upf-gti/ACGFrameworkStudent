@@ -1,5 +1,51 @@
-build/*
-.vs/*
-.vscode/*
-res/volumes*
-imgui.ini
+# Build directories
+/build/
+**/build/
+/cmake-build-*/
+**/cmake-build-*/
+
+# CMake generated files
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+compile_commands.json
+CTestTestfile.cmake
+Makefile
+
+# Ninja generated files
+.ninja_deps
+.ninja_log
+build.ninja
+
+# Visual Studio generated files
+*.sln
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+
+# Xcode generated files
+*.xcodeproj/
+*.xcworkspace/
+*.xcuserdatad/
+*.xcuserstate
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.VC.db
+*.VC.opendb
+x64/
+x86/
+Debug/
+Release/
+out/
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Render output
+output.bmp
+*.bmp
+*.exr
