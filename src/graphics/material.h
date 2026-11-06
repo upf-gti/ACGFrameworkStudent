@@ -23,7 +23,6 @@ public:
 
 class FlatMaterial : public Material {
 public:
-
 	FlatMaterial(glm::vec4 color = glm::vec4(1.f));
 	~FlatMaterial();
 
@@ -56,4 +55,17 @@ public:
 	void setUniforms(Camera* camera, glm::mat4 model);
 	void render(Mesh* mesh, glm::mat4 model, Camera* camera);
 	void renderInMenu();
+};
+
+class AbsorptionModelMaterial : public Material {
+public:
+	float abs_coefficient;
+	Shader* base_shader = NULL;
+	
+	AbsorptionModelMaterial(float abs_coefficient = 0.5);
+	~AbsorptionModelMaterial();
+	void setUniforms(Camera* camera, glm::mat4 model);
+	void render(Mesh* mesh, glm::mat4 model, Camera* camera);
+	void renderInMenu();
+	
 };

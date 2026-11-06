@@ -22,6 +22,8 @@ void FlatMaterial::setUniforms(Camera* camera, glm::mat4 model)
 	this->shader->setUniform("u_model", model);
 
 	this->shader->setUniform("u_color", this->color);
+	//this->shader->setUniform("u_background_color", Application::instance->background_color);
+	//this->shader->setUniform("u_abs_coefficient", this->abs_coefficient);
 }
 
 void FlatMaterial::render(Mesh* mesh, glm::mat4 model, Camera* camera)
@@ -43,7 +45,7 @@ void FlatMaterial::render(Mesh* mesh, glm::mat4 model, Camera* camera)
 void FlatMaterial::renderInMenu()
 {
 	ImGui::Text("Material Type: %s", std::string("Flat").c_str());
-
+	//ImGui::SliderFloat("Absorption coefficient", &this->abs_coefficient, 0, 1);
 	ImGui::ColorEdit3("Color", (float*)&this->color);
 }
 
@@ -160,4 +162,50 @@ void StandardMaterial::renderInMenu()
 	}
 
 	if (!this->show_normals) ImGui::ColorEdit3("Color", (float*)&this->color);
+}
+
+
+// ABSORPTION MODEL
+AbsorptionModelMaterial::AbsorptionModelMaterial(float abs_coefficient_) {
+	this->abs_coefficient = abs_coefficient_;
+
+	this->base_shader = Shader::Get("res/shaders/basic.vs", "res/shaders/absorptionmodel.fs");
+	this->shader = this->base_shader;
+}
+
+AbsorptionModelMaterial::~AbsorptionModelMaterial() {}
+
+void AbsorptionModelMaterial::setUniforms(Camera* camera, glm::mat4 model) {
+
+	this->shader->setUniform("u_viewprojection", camera->viewprojection_matrix);
+	this->shader->setUniform("u_camera_position", camera->eye);
+	this->shader->setUniform("u_model", model);
+
+	this->shader->setUniform("u_color", this->color);
+	this->shader->setUniform("u_background_color", Application::instance->background_color);
+	this->shader->setUniform("u_abs_coefficient", this->abs_coefficient);
+	this->shader->setUniform("u_camera_origin", Application::instance->camera->eye);
+}
+
+void AbsorptionModelMaterial::render(Mesh* mesh, glm::mat4 model, Camera* camera)
+{
+	if (mesh && this->shader) {
+		// Enable shader
+		this->shader->enable();
+
+		// Upload uniforms
+		setUniforms(camera, model);
+
+		// Do the draw call
+		mesh->render(GL_TRIANGLES);
+
+		this->shader->disable();
+	}
+}
+
+void AbsorptionModelMaterial::renderInMenu()
+{
+	int index = 0;
+	ImGui::Combo("Light  Model", &index ,"Absorption\0AbsorptionEmission");
+	ImGui::SliderFloat("Absorption coefficient", &this->abs_coefficient, 0, 1);
 }

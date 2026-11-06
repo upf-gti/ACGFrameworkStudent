@@ -96,7 +96,7 @@ public:
 	std::vector< BoneInfo > bones_info; //tells 
 	glm::mat4 bind_matrix;
 
-	glm::vec3 aabb_min;
+	glm::vec3 aabb_min; 
 	glm::vec3 aabb_max;
 	BoundingBox box;
 

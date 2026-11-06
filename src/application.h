@@ -15,6 +15,7 @@ public:
 	static Camera* camera;
 	std::vector<SceneNode*> node_list;
 	glm::vec4 ambient_light;
+	glm::vec3 background_color;
 	std::vector<Light*> light_list;
 
 	int window_width;
