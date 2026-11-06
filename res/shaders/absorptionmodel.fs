@@ -7,6 +7,8 @@ uniform vec4 u_color;
 uniform vec3 u_background_color;
 uniform float u_abs_coefficient;
 uniform vec3 u_camera_position;
+uniform vec3 u_mesh_aabbmin;
+uniform vec3 u_mesh_aabbmax;
 
 out vec4 FragColor; 
 
@@ -25,8 +27,8 @@ void main()
 	
 	vec3 rayOrigin = u_camera_position;
 	vec3 rayDir = normalize(u_camera_position-v_position);
-	vec3 boxMin = vec3(-1.0, -1.0, -1.0); //HARDCODED, GET INFO FROM MESH LATER
-	vec3 boxMax = vec3(1.0, 1.0, 1.0); //HARDCODED, GET INFO FROM MESH LATER
+	vec3 boxMin = u_mesh_aabbmin; //HARDCODED, GET INFO FROM MESH LATER
+	vec3 boxMax = u_mesh_aabbmax; //HARDCODED, GET INFO FROM MESH LATER
 	vec2 entry_exit = intersectAABB(rayOrigin, rayDir, boxMin, boxMax);
 
 	vec3 B = u_background_color;
