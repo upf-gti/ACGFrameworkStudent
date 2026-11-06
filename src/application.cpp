@@ -21,12 +21,20 @@ void Application::init(GLFWwindow* window)
     this->flag_wireframe = false;
 
     this->ambient_light = glm::vec4(0.75f, 0.75f, 0.75f, 1.f);
+    this->background_color = glm::vec3(0.1f, 0.1f, 0.1f); //We later send this to the shader
+
 
     /* ADD NODES TO THE SCENE */
     SceneNode* example = new SceneNode("Example Node");
     example->mesh = Mesh::Get("res/meshes/sphere.obj");
-    example->material = new StandardMaterial();
+    example->material = new FlatMaterial();
     this->node_list.push_back(example);
+
+    // Adding sphere for volue (TASK 1)
+    SceneNode* volume_1 = new SceneNode("Volume Node");
+    volume_1->mesh = Mesh::Get("res/meshes/cube.obj");
+    volume_1->material = new AbsorptionModelMaterial();
+    this->node_list.push_back(volume_1);
 }
 
 void Application::update(float dt)
@@ -41,8 +49,8 @@ void Application::update(float dt)
 
 void Application::render()
 {
-    // Set the clear color (the background color)
-    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+    // Set the clear color (the background color) - used as background light for volumes
+    glClearColor(this->background_color.x, this->background_color.y, this->background_color.z, 1.0f);
 
     // Clear the window and the depth buffer
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
