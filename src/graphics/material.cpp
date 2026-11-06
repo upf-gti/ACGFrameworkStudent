@@ -185,6 +185,8 @@ void AbsorptionModelMaterial::setUniforms(Camera* camera, glm::mat4 model) {
 	this->shader->setUniform("u_background_color", Application::instance->background_color);
 	this->shader->setUniform("u_abs_coefficient", this->abs_coefficient);
 	this->shader->setUniform("u_camera_origin", Application::instance->camera->eye);
+	this->shader->setUniform("u_mesh_aabbmin", Application::instance->node_list[1]->mesh->aabb_min);
+	this->shader->setUniform("u_mesh_aabbmax", Application::instance->node_list[1]->mesh->aabb_max);
 }
 
 void AbsorptionModelMaterial::render(Mesh* mesh, glm::mat4 model, Camera* camera)
