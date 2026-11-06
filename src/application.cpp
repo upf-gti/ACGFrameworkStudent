@@ -75,6 +75,7 @@ void Application::renderGUI()
     if (ImGui::TreeNodeEx("Scene", ImGuiTreeNodeFlags_DefaultOpen))
     {
         ImGui::ColorEdit3("Ambient light", (float*)&this->ambient_light);
+        ImGui::ColorEdit3("Background color", (float*)&this->background_color);
 
         if (ImGui::TreeNode("Camera")) {
             this->camera->renderInMenu();

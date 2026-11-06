@@ -169,7 +169,7 @@ void StandardMaterial::renderInMenu()
 AbsorptionModelMaterial::AbsorptionModelMaterial(float abs_coefficient_) {
 	this->abs_coefficient = abs_coefficient_;
 
-	this->base_shader = Shader::Get("res/shaders/basic.vs", "res/shaders/flat.fs");
+	this->base_shader = Shader::Get("res/shaders/basic.vs", "res/shaders/absorptionmodel.fs");
 	this->shader = this->base_shader;
 }
 
@@ -184,6 +184,7 @@ void AbsorptionModelMaterial::setUniforms(Camera* camera, glm::mat4 model) {
 	this->shader->setUniform("u_color", this->color);
 	this->shader->setUniform("u_background_color", Application::instance->background_color);
 	this->shader->setUniform("u_abs_coefficient", this->abs_coefficient);
+	this->shader->setUniform("u_camera_origin", Application::instance->camera->eye);
 }
 
 void AbsorptionModelMaterial::render(Mesh* mesh, glm::mat4 model, Camera* camera)
