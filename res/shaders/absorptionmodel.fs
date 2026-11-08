@@ -18,7 +18,7 @@ vec2 intersectAABB(vec3 rayOrigin, vec3 rayDir, vec3 boxMin, vec3 boxMax) {
     float tNear = max(max(t1.x, t1.y), t1.z);	
     float tFar = min(min(t2.x, t2.y), t2.z);
     return vec2(tNear, tFar);
-};
+}
 
 void main()
 {

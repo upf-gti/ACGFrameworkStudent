@@ -33,7 +33,7 @@ void Application::init(GLFWwindow* window)
     // Adding sphere for volue (TASK 1)
     SceneNode* volume_1 = new SceneNode("Volume Node");
     volume_1->mesh = Mesh::Get("res/meshes/cube.obj");
-    volume_1->material = new AbsorptionModelMaterial();
+    volume_1->material = new EmissionAbsorbtion();
     this->node_list.push_back(volume_1);
 }
 

@@ -8,6 +8,7 @@
 #include "mesh.h"
 #include "texture.h"
 #include "shader.h"
+#include "utils.h"
 
 class Material {
 public:
@@ -68,4 +69,33 @@ public:
 	void render(Mesh* mesh, glm::mat4 model, Camera* camera);
 	void renderInMenu();
 	
+};
+
+class AbsorptionHeterogeneous : public Material {
+public:
+	float abs_coefficient;
+	Shader* base_shader = NULL;
+	float step;
+
+	AbsorptionHeterogeneous(float abs_coefficient = 1, float step = 0.1);
+	~AbsorptionHeterogeneous();
+	void setUniforms(Camera* camera, glm::mat4 model);
+	void render(Mesh* mesh, glm::mat4 model, Camera* camera);
+	void renderInMenu();
+
+};
+
+class EmissionAbsorbtion : public Material {
+public:
+	float abs_coefficient;
+	Shader* base_shader = NULL;
+	float step;
+	glm::vec3 Le;
+	
+
+	EmissionAbsorbtion(float abs_coefficient = 1, float step = 0.1, float Le = 1.0);
+	~EmissionAbsorbtion();
+	void setUniforms(Camera* camera, glm::mat4 model);
+	void render(Mesh* mesh, glm::mat4 model, Camera* camera);
+	void renderInMenu();
 };
