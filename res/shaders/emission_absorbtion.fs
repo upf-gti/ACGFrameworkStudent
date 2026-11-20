@@ -155,7 +155,7 @@ void main()
 		i += delta;
         vec3 Le = getLight(pos);
         float T = exp(-tau);
-        emission += T*Le*mu_a;
+        emission += T*Le*mu_a*delta;
 		pos = rayOrigin + rayDir * i;
 	}
 	float T = exp(-tau);

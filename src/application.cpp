@@ -25,10 +25,11 @@ void Application::init(GLFWwindow* window)
 
 
     //Initialize materials
-    absorption_mat = new AbsorptionModelMaterial();
-    flat_mat = new FlatMaterial();
-    emis_absorb_mat = new EmissionAbsorbtion(0.5, 0.1);
-    absorb_het_mat = new AbsorptionHeterogeneous();
+    //absorption_mat = new AbsorptionModelMaterial();
+    //flat_mat = new FlatMaterial();
+    //emis_absorb_mat = new EmissionAbsorbtion(0.5, 0.1);
+    //absorb_het_mat = new AbsorptionHeterogeneous();
+    volume_mat = new VolumeMaterial(0.5, 0.1);
 
     /* ADD NODES TO THE SCENE */
     SceneNode* example = new SceneNode("Example Node");
@@ -39,7 +40,9 @@ void Application::init(GLFWwindow* window)
     // Adding sphere for volue (TASK 1)
     SceneNode* volume_1 = new SceneNode("Volume Node");
     volume_1->mesh = Mesh::Get("res/meshes/cube.obj");
-    volume_1->material = absorption_mat;
+    volume_1->material = volume_mat;
+
+    /*
     // Show GUI based on material
     if (volume_1->material == absorption_mat) {
         volume_1->material->abs_slider = true;
@@ -55,6 +58,7 @@ void Application::init(GLFWwindow* window)
         volume_1->material->step_slider = true;
         volume_1->material->index = 2;
     }
+    */
 
     this->node_list.push_back(volume_1);
 }
@@ -117,15 +121,15 @@ void Application::renderGUI()
                         switch (material_index)
                         {
                         case 0:
-                            node_list[1]->material = absorption_mat;
+                            node_list[1]->material->shader = Shader::Get("res/shaders/basic.vs", "res/shaders/absorptionmodel.fs");
                             break;
 
                         case 1:
-                            node_list[1]->material = absorb_het_mat;
+                            node_list[1]->material->shader = Shader::Get("res/shaders/basic.vs", "res/shaders/absorptionheterogeneous.fs");
                             break;
 
                         case 2:
-                            node_list[1]->material = emis_absorb_mat;
+                            node_list[1]->material->shader = Shader::Get("res/shaders/basic.vs", "res/shaders/emission_absorbtion.fs");
                             break;
                         }
                     }

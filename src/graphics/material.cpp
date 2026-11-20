@@ -165,113 +165,18 @@ void StandardMaterial::renderInMenu()
 	if (!this->show_normals) ImGui::ColorEdit3("Color", (float*)&this->color);
 }
 
-// ABSORPTION MODEL HETEROGENEOUS
-AbsorptionHeterogeneous::AbsorptionHeterogeneous(float abs_coefficient_, float step_) {
+
+VolumeMaterial::VolumeMaterial(float abs_coefficient_, float step_) {
 	this->abs_coefficient = abs_coefficient_;
 	this->step = step_;
-
-	this->base_shader = Shader::Get("res/shaders/basic.vs", "res/shaders/absorptionheterogeneous.fs");
-	this->shader = this->base_shader;
-}
-
-AbsorptionHeterogeneous::~AbsorptionHeterogeneous() {}
-
-void AbsorptionHeterogeneous::setUniforms(Camera* camera, glm::mat4 model) {
-
-	this->shader->setUniform("u_viewprojection", camera->viewprojection_matrix);
-	this->shader->setUniform("u_camera_position", camera->eye);
-	this->shader->setUniform("u_model", model);
-
-	this->shader->setUniform("u_color", this->color);
-	this->shader->setUniform("u_background_color", Application::instance->background_color);
-	this->shader->setUniform("u_abs_coefficient", this->abs_coefficient);
-	this->shader->setUniform("u_camera_origin", Application::instance->camera->eye);
-	this->shader->setUniform("u_step", this->step);
-
-}
-
-void AbsorptionHeterogeneous::render(Mesh* mesh, glm::mat4 model, Camera* camera)
-{
-	if (mesh && this->shader) {
-		// Enable shader
-		this->shader->enable();
-
-		// Upload uniforms
-		setUniforms(camera, model);
-
-		// Do the draw call
-		mesh->render(GL_TRIANGLES);
-
-		this->shader->disable();
-	}
-}
-
-void AbsorptionHeterogeneous::renderInMenu()
-{
-		ImGui::SliderFloat("Absorption coefficient", &this->abs_coefficient, 0, 4);
-		ImGui::SliderFloat("Step size", &this->step, 0, 1);
-}
-
-// ABSORPTION MODEL
-AbsorptionModelMaterial::AbsorptionModelMaterial(float abs_coefficient_) {
-	this->abs_coefficient = abs_coefficient_;
-
+	//this->Le = Application::instance->ambient_light;
 	this->base_shader = Shader::Get("res/shaders/basic.vs", "res/shaders/absorptionmodel.fs");
 	this->shader = this->base_shader;
 }
 
-AbsorptionModelMaterial::~AbsorptionModelMaterial() {}
+VolumeMaterial::~VolumeMaterial() {}
 
-void AbsorptionModelMaterial::setUniforms(Camera* camera, glm::mat4 model) {
-
-	this->shader->setUniform("u_viewprojection", camera->viewprojection_matrix);
-	this->shader->setUniform("u_camera_position", camera->eye);
-	this->shader->setUniform("u_model", model);
-
-	this->shader->setUniform("u_color", this->color);
-	this->shader->setUniform("u_background_color", Application::instance->background_color);
-	this->shader->setUniform("u_abs_coefficient", this->abs_coefficient);
-	this->shader->setUniform("u_camera_origin", Application::instance->camera->eye);
-	this->shader->setUniform("u_mesh_aabbmin", Application::instance->node_list[1]->mesh->aabb_min);
-	this->shader->setUniform("u_mesh_aabbmax", Application::instance->node_list[1]->mesh->aabb_max);
-}
-
-void AbsorptionModelMaterial::render(Mesh* mesh, glm::mat4 model, Camera* camera)
-{
-	if (mesh && this->shader) {
-		// Enable shader
-		this->shader->enable();
-
-		// Upload uniforms
-		setUniforms(camera, model);
-
-		// Do the draw call
-		mesh->render(GL_TRIANGLES);
-
-		this->shader->disable();
-	}
-}
-
-void AbsorptionModelMaterial::renderInMenu()
-{
-	ImGui::SliderFloat("Absorption coefficient", &this->abs_coefficient, 0, 4);
-}
-
-
-// EMISSION ABSORBTION
-
-EmissionAbsorbtion::EmissionAbsorbtion(float abs_coefficient_, float step_) {
-	this->abs_coefficient = abs_coefficient_;
-	this->step = step_;
-	//this->Le = Application::instance->ambient_light;
-
-	this->base_shader = Shader::Get("res/shaders/basic.vs", "res/shaders/emission_absorbtion.fs");
-	this->shader = this->base_shader;
-}
-
-EmissionAbsorbtion::~EmissionAbsorbtion() {}
-
-void EmissionAbsorbtion::setUniforms(Camera* camera, glm::mat4 model) {
+void VolumeMaterial::setUniforms(Camera* camera, glm::mat4 model) {
 
 	this->shader->setUniform("u_viewprojection", camera->viewprojection_matrix);
 	this->shader->setUniform("u_camera_position", camera->eye);
@@ -282,12 +187,21 @@ void EmissionAbsorbtion::setUniforms(Camera* camera, glm::mat4 model) {
 	this->shader->setUniform("u_abs_coefficient", this->abs_coefficient);
 	this->shader->setUniform("u_camera_origin", Application::instance->camera->eye);
 	this->shader->setUniform("u_step", this->step);
-	//std::cout << Application::instance->ambient_light.x << Application::instance->ambient_light.y << Application::instance->ambient_light.z;
+	this->shader->setUniform("u_mesh_aabbmin", Application::instance->node_list[1]->mesh->aabb_min);
+	this->shader->setUniform("u_mesh_aabbmax", Application::instance->node_list[1]->mesh->aabb_max);
 	this->shader->setUniform3("u_emitted_light", Le);
 
 }
 
-void EmissionAbsorbtion::render(Mesh* mesh, glm::mat4 model, Camera* camera)
+void VolumeMaterial::loadVDB(std::string file_path) {
+	;
+}
+
+void VolumeMaterial::estimate3DTexture(easyVDB::OpenVDBReader* vdbReader) {
+	;
+}
+
+void VolumeMaterial::render(Mesh* mesh, glm::mat4 model, Camera* camera)
 {
 	if (mesh && this->shader) {
 		// Enable shader
@@ -303,9 +217,16 @@ void EmissionAbsorbtion::render(Mesh* mesh, glm::mat4 model, Camera* camera)
 	}
 }
 
-void EmissionAbsorbtion::renderInMenu()
+void VolumeMaterial::renderInMenu()
 {
+	// Visible for all materials
 	ImGui::SliderFloat("Absorption coefficient", &this->abs_coefficient, 0, 4);
-	ImGui::SliderFloat("Step size", &this->step, 0, 1);
-	ImGui::ColorEdit3("Emission color", (float*)&this->Le);
+
+	if (this->shader != Shader::Get("res/shaders/basic.vs", "res/shaders/absorptionmodel.fs")) { //If not homogeneous, show step size
+		ImGui::SliderFloat("Step size", &this->step, 0, 1);
+	}
+	
+	if (this->shader == Shader::Get("res/shaders/basic.vs", "res/shaders/emission_absorbtion.fs")) {
+		ImGui::ColorEdit3("Emission color", (float*)&this->Le);
+	}
 }

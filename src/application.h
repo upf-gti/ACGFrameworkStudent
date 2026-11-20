@@ -21,9 +21,10 @@ public:
 	int material_index;
 
 	FlatMaterial* flat_mat;
-	AbsorptionModelMaterial *absorption_mat;
-	AbsorptionHeterogeneous* absorb_het_mat;
-	EmissionAbsorbtion* emis_absorb_mat;
+	//AbsorptionModelMaterial *absorption_mat;
+	//AbsorptionHeterogeneous* absorb_het_mat;
+	//EmissionAbsorbtion* emis_absorb_mat;
+	VolumeMaterial* volume_mat;
 
 	int current_task = 0;
 
