@@ -30,6 +30,7 @@ void Application::init(GLFWwindow* window)
     //emis_absorb_mat = new EmissionAbsorbtion(0.5, 0.1);
     //absorb_het_mat = new AbsorptionHeterogeneous();
     volume_mat = new VolumeMaterial(0.5, 0.1);
+    volume_mat->loadVDB("res/meshes/bunny_cloud.vdb");
 
     /* ADD NODES TO THE SCENE */
     SceneNode* example = new SceneNode("Example Node");
