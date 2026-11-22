@@ -131,9 +131,6 @@ vec3 getLight(vec3 pos) {
 }
 
 
-
-
-
 void main()
 {
 	
@@ -161,10 +158,9 @@ void main()
 	while(i < exit_dist) {
 		float mu_t = getAbsorbtion(pos)*u_abs_coefficient;
 		i += delta;
-        vec3 Le = getLight(pos);
-        float T = exp(-tau);
-		tau += mu_t * delta;
-        emission += T*Le*mu_t;
+    vec3 Le = getLight(pos);
+    float T = exp(-tau);
+    emission += T*Le*mu_a*delta;
 		pos = rayOrigin + rayDir * i;
 	}
 	float T = exp(-tau);

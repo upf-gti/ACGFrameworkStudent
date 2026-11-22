@@ -10,6 +10,8 @@
 #include "shader.h"
 #include "utils.h"
 
+#include "openvdbReader.h"
+
 class Material {
 public:
 
@@ -17,9 +19,13 @@ public:
 	Texture* texture = NULL;
 	glm::vec4 color;
 
+	int index; //Used for selections
+	bool abs_slider = false;
+	bool step_slider = false;
+
 	virtual void setUniforms(Camera* camera, glm::mat4 model) = 0;
 	virtual void render(Mesh* mesh, glm::mat4 model, Camera* camera) = 0;
-	virtual void renderInMenu() = 0;
+	virtual void renderInMenu() = 0; //=0, thus should be overriden by child classes
 };
 
 class FlatMaterial : public Material {
@@ -58,44 +64,21 @@ public:
 	void renderInMenu();
 };
 
-class AbsorptionModelMaterial : public Material {
-public:
-	float abs_coefficient;
-	Shader* base_shader = NULL;
-	
-	AbsorptionModelMaterial(float abs_coefficient = 0.5);
-	~AbsorptionModelMaterial();
-	void setUniforms(Camera* camera, glm::mat4 model);
-	void render(Mesh* mesh, glm::mat4 model, Camera* camera);
-	void renderInMenu();
-	
-};
 
-class AbsorptionHeterogeneous : public Material {
+class VolumeMaterial : public Material {
 public:
 	float abs_coefficient;
 	Shader* base_shader = NULL;
 	float step;
+	glm::vec3 Le = glm::vec3(0.0);
 
-	AbsorptionHeterogeneous(float abs_coefficient = 1, float step = 0.1);
-	~AbsorptionHeterogeneous();
+
+	VolumeMaterial(float abs_coefficient = 1, float step = 0.01);
+	~VolumeMaterial();
 	void setUniforms(Camera* camera, glm::mat4 model);
+	void loadVDB(std::string file_path);
+	void estimate3DTexture(easyVDB::OpenVDBReader* vdbReader);
 	void render(Mesh* mesh, glm::mat4 model, Camera* camera);
 	void renderInMenu();
-
-};
-
-class EmissionAbsorbtion : public Material {
-public:
-	float abs_coefficient;
-	Shader* base_shader = NULL;
-	float step;
-	glm::vec3 Le;
-	
-
-	EmissionAbsorbtion(float abs_coefficient = 1, float step = 0.1, float Le = 1.0);
-	~EmissionAbsorbtion();
-	void setUniforms(Camera* camera, glm::mat4 model);
-	void render(Mesh* mesh, glm::mat4 model, Camera* camera);
-	void renderInMenu();
+	//Render in menu then checks for current shader to show sliders	
 };
