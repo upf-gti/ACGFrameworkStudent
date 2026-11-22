@@ -198,8 +198,8 @@ void VolumeMaterial::setUniforms(Camera* camera, glm::mat4 model) {
 	this->shader->setUniform("u_camera_origin", local_camera_pos);
 
 	this->shader->setUniform("u_step", this->step);
-	this->shader->setUniform("u_mesh_aabbmin", Application::instance->node_list[1]->mesh->aabb_min);
-	this->shader->setUniform("u_mesh_aabbmax", Application::instance->node_list[1]->mesh->aabb_max);
+	this->shader->setUniform("u_mesh_aabbmin", Application::instance->node_list[0]->mesh->aabb_min);
+	this->shader->setUniform("u_mesh_aabbmax", Application::instance->node_list[0]->mesh->aabb_max);
 	this->shader->setUniform3("u_emitted_light", Le);
 
 	// VDB
@@ -351,5 +351,11 @@ void VolumeMaterial::renderInMenu()
 
 	if (this->shader == Shader::Get("res/shaders/basic.vs", "res/shaders/emission_absorbtion.fs")) {
 		ImGui::ColorEdit3("Emission color", (float*)&this->Le);
+		//ImGui::SliderFloat("Emission noise shift");
+	}
+	if (this->shader == Shader::Get("res/shader/basic.vs", "res/shaders/scattering.fs")) {
+		//ImGui::SliderFloat("Asymmetrical parameter (g)");
+		//ASSYMETRICAL PARAMETER G
+		;
 	}
 }
