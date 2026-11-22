@@ -39,6 +39,10 @@ void Application::init(GLFWwindow* window)
     volume_1->material = volume_mat;
 
     this->node_list.push_back(volume_1);
+
+    // Adding light
+    Light*  light_1 = new Light(glm::vec3(3.f), 1.f, glm::vec4(1.f));
+    
 }
 
 void Application::update(float dt)

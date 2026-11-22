@@ -9,6 +9,12 @@ uniform float u_abs_coefficient;
 uniform vec3 u_camera_position;
 uniform float u_step;
 uniform vec3 u_emitted_light;
+uniform float u_light_change;
+uniform float u_light_intensity;
+uniform vec3 u_light_position;
+uniform vec4 u_light_color;
+uniform vec3 u_local_light_position;
+uniform float u_scat_coefficient;
 
 out vec4 FragColor; 
 
@@ -83,7 +89,7 @@ float mod289(float x){return x - floor(x * (1.0 / 289.0)) * 289.0;}
 vec4 mod289(vec4 x){return x - floor(x * (1.0 / 289.0)) * 289.0;}
 vec4 perm(vec4 x){return mod289(((x * 34.0) + 1.0) * x);}
 
-float noise(vec3 p){
+float noise(vec3 p, float i){
     vec3 a = floor(p);
     vec3 d = p - a;
     d = d * d * (3.0 - 2.0 * d);
@@ -102,7 +108,7 @@ float noise(vec3 p){
     vec4 o3 = o2 * d.z + o1 * (1.0 - d.z);
     vec2 o4 = o3.yw * d.x + o3.xz * (1.0 - d.x);
 
-    return o4.y * d.y + o4.x * (1.0 - d.y);
+    return o4.y * d.y*i + o4.x * (1.0 - d.y)*(1-i);
 }
 
 // MAKE SURE TO CLAMP
@@ -120,7 +126,7 @@ float computeStep(float inter) {
 }
 
 vec3 getLight(vec3 pos) {
-    float x = clamp(noise(pos), 0.0, 1.0);
+    float x = clamp(noise(pos, u_light_change), 0.0, 1.0);
     return x * u_emitted_light;
 }
 
@@ -150,12 +156,11 @@ void main()
 	}
 
 	while(i < exit_dist) {
-		float mu_a = getAbsorbtion(pos)*u_abs_coefficient;
-		tau += mu_a * delta;
+		float mu_t = getAbsorbtion(pos)*u_abs_coefficient;
 		i += delta;
-        vec3 Le = getLight(pos);
-        float T = exp(-tau);
-        emission += T*Le*mu_a*delta;
+    vec3 Le = getLight(pos);
+    float T = exp(-tau);
+    emission += T*Le*mu_a*delta;
 		pos = rayOrigin + rayDir * i;
 	}
 	float T = exp(-tau);

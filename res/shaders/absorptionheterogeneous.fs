@@ -8,6 +8,11 @@ uniform vec3 u_background_color;
 uniform float u_abs_coefficient;
 uniform vec3 u_camera_position;
 uniform float u_step;
+uniform float u_light_change;
+uniform float u_light_intensity;
+uniform vec3 u_light_position;
+uniform vec4 u_light_color;
+uniform vec3 u_local_light_position;
 uniform sampler3D u_3D_volume;
 
 out vec4 FragColor; 
