@@ -30,35 +30,13 @@ void Application::init(GLFWwindow* window)
     //emis_absorb_mat = new EmissionAbsorbtion(0.5, 0.1);
     //absorb_het_mat = new AbsorptionHeterogeneous();
     volume_mat = new VolumeMaterial(0.5, 0.1);
+    volume_mat->loadVDB("res/meshes/bunny_cloud.vdb");
 
     /* ADD NODES TO THE SCENE */
-    SceneNode* example = new SceneNode("Example Node");
-    example->mesh = Mesh::Get("res/meshes/sphere.obj");
-    example->material = flat_mat;
-    this->node_list.push_back(example);
-
     // Adding sphere for volue (TASK 1)
     SceneNode* volume_1 = new SceneNode("Volume Node");
     volume_1->mesh = Mesh::Get("res/meshes/cube.obj");
     volume_1->material = volume_mat;
-
-    /*
-    // Show GUI based on material
-    if (volume_1->material == absorption_mat) {
-        volume_1->material->abs_slider = true;
-        volume_1->material->index = 0;
-    }
-    else if (volume_1->material == emis_absorb_mat) {
-        volume_1->material->abs_slider = true;
-        volume_1->material->step_slider = true;
-        volume_1->material->index = 1;
-    }
-    else if (volume_1->material == absorb_het_mat) {
-        volume_1->material->abs_slider = true;
-        volume_1->material->step_slider = true;
-        volume_1->material->index = 2;
-    }
-    */
 
     this->node_list.push_back(volume_1);
 }
@@ -115,21 +93,21 @@ void Application::renderGUI()
         for (auto& node : this->node_list) {
             ss << count;
             if (ImGui::TreeNode(node->name.c_str())) {
-                if (node == this->node_list[1]) {
+                if (node == this->node_list[0]) {
                     if (ImGui::Combo("Light Model", &material_index, "Absorption Homogeneous\0Absorption Heterogeneous\0Absorption-Emission\0"))
                     {
                         switch (material_index)
                         {
                         case 0:
-                            node_list[1]->material->shader = Shader::Get("res/shaders/basic.vs", "res/shaders/absorptionmodel.fs");
+                            node_list[0]->material->shader = Shader::Get("res/shaders/basic.vs", "res/shaders/absorptionmodel.fs");
                             break;
 
                         case 1:
-                            node_list[1]->material->shader = Shader::Get("res/shaders/basic.vs", "res/shaders/absorptionheterogeneous.fs");
+                            node_list[0]->material->shader = Shader::Get("res/shaders/basic.vs", "res/shaders/absorptionheterogeneous.fs");
                             break;
 
                         case 2:
-                            node_list[1]->material->shader = Shader::Get("res/shaders/basic.vs", "res/shaders/emission_absorbtion.fs");
+                            node_list[0]->material->shader = Shader::Get("res/shaders/basic.vs", "res/shaders/emission_absorbtion.fs");
                             break;
                         }
                     }

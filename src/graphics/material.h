@@ -64,53 +64,6 @@ public:
 	void renderInMenu();
 };
 
-class AbsorptionModelMaterial : public Material {
-public:
-	float abs_coefficient;
-	Shader* base_shader = NULL;
-	
-	
-	AbsorptionModelMaterial(float abs_coefficient = 0.5);
-	~AbsorptionModelMaterial();
-	void setUniforms(Camera* camera, glm::mat4 model);
-	void render(Mesh* mesh, glm::mat4 model, Camera* camera);
-	void renderInMenu();
-	
-};
-
-class AbsorptionHeterogeneous : public Material {
-public:
-	float abs_coefficient;
-	Shader* base_shader = NULL;
-	float step;
-
-
-	AbsorptionHeterogeneous(float abs_coefficient = 1, float step = 0.01);
-	~AbsorptionHeterogeneous();
-	void setUniforms(Camera* camera, glm::mat4 model);
-	void loadVDB(std::string file_path);
-	void estimate3DTexture(easyVDB::OpenVDBReader* vdbReader);
-	void render(Mesh* mesh, glm::mat4 model, Camera* camera);
-	void renderInMenu();
-
-};
-
-class EmissionAbsorbtion : public Material {
-public:
-	float abs_coefficient;
-	Shader* base_shader = NULL;
-	float step;
-	glm::vec3 Le = glm::vec3(0.0);
-	
-
-	EmissionAbsorbtion(float abs_coefficient = 1, float step = 0.01);
-	~EmissionAbsorbtion();
-	void setUniforms(Camera* camera, glm::mat4 model);
-	void loadVDB(std::string file_path);
-	void estimate3DTexture(easyVDB::OpenVDBReader* vdbReader);
-	void render(Mesh* mesh, glm::mat4 model, Camera* camera);
-	void renderInMenu();
-};
 
 class VolumeMaterial : public Material {
 public:
@@ -118,6 +71,7 @@ public:
 	Shader* base_shader = NULL;
 	float step;
 	glm::vec3 Le = glm::vec3(0.0);
+
 
 	VolumeMaterial(float abs_coefficient = 1, float step = 0.01);
 	~VolumeMaterial();
