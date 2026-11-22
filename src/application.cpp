@@ -35,6 +35,10 @@ void Application::init(GLFWwindow* window)
     volume_1->mesh = Mesh::Get("res/meshes/cube.obj");
     volume_1->material = new EmissionAbsorbtion();
     this->node_list.push_back(volume_1);
+
+    // Adding light
+    Light*  light_1 = new Light(glm::vec3(3.f), 1.f, glm::vec4(1.f));
+    
 }
 
 void Application::update(float dt)

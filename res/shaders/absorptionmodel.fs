@@ -9,6 +9,11 @@ uniform float u_abs_coefficient;
 uniform vec3 u_camera_position;
 uniform vec3 u_mesh_aabbmin;
 uniform vec3 u_mesh_aabbmax;
+uniform float u_light_change;
+uniform float u_light_intensity;
+uniform vec3 u_light_position;
+uniform vec4 u_light_color;
+uniform vec3 u_local_light_position;
 
 out vec4 FragColor; 
 
