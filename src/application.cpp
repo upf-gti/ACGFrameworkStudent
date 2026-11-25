@@ -21,12 +21,32 @@ void Application::init(GLFWwindow* window)
     this->flag_wireframe = false;
 
     this->ambient_light = glm::vec4(0.75f, 0.75f, 0.75f, 1.f);
+    this->background_color = glm::vec3(0.1f, 0.1f, 0.1f); //We later send this to the shader
+
+
+
+
+    //Initialize materials
+    //absorption_mat = new AbsorptionModelMaterial();
+    //flat_mat = new FlatMaterial();
+    //emis_absorb_mat = new EmissionAbsorbtion(0.5, 0.1);
+    //absorb_het_mat = new AbsorptionHeterogeneous();
+    this->material_index = 0;
+    volume_mat = new VolumeMaterial(0.5, 0.1);
+    volume_mat->loadVDB("res/meshes/bunny_cloud.vdb");
 
     /* ADD NODES TO THE SCENE */
-    SceneNode* example = new SceneNode("Example Node");
-    example->mesh = Mesh::Get("res/meshes/sphere.obj");
-    example->material = new StandardMaterial();
-    this->node_list.push_back(example);
+    // Adding sphere for volue (TASK 1)
+    SceneNode* volume_1 = new SceneNode("Volume Node");
+    volume_1->mesh = Mesh::Get("res/meshes/cube.obj");
+    volume_1->material = volume_mat;
+
+    this->node_list.push_back(volume_1);
+
+    // Adding light
+    Light*  light_1 = new Light(glm::vec3(3.f), 1.f, glm::vec4(1.f));
+    this->light_list.push_back(light_1);
+    
 }
 
 void Application::update(float dt)
@@ -37,12 +57,14 @@ void Application::update(float dt)
         this->camera->orbit(-delta.x * dt, delta.y * dt);
     }
     this->lastMousePosition = this->mousePosition;
+
+    //Check current shader and change material
 }
 
 void Application::render()
 {
-    // Set the clear color (the background color)
-    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+    // Set the clear color (the background color) - used as background light for volumes
+    glClearColor(this->background_color.x, this->background_color.y, this->background_color.z, 1.0f);
 
     // Clear the window and the depth buffer
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -67,9 +89,20 @@ void Application::renderGUI()
     if (ImGui::TreeNodeEx("Scene", ImGuiTreeNodeFlags_DefaultOpen))
     {
         ImGui::ColorEdit3("Ambient light", (float*)&this->ambient_light);
+        ImGui::ColorEdit3("Background color", (float*)&this->background_color);
 
         if (ImGui::TreeNode("Camera")) {
             this->camera->renderInMenu();
+            ImGui::TreePop();
+        }
+
+        if (ImGui::TreeNode("Lights")) {
+            for (Light* light : this->light_list) {
+                if (ImGui::TreeNode(light->name.c_str())) {
+                    light->renderInMenu();
+                    ImGui::TreePop();
+                }
+            }
             ImGui::TreePop();
         }
 
@@ -78,10 +111,34 @@ void Application::renderGUI()
         for (auto& node : this->node_list) {
             ss << count;
             if (ImGui::TreeNode(node->name.c_str())) {
-                node->renderInMenu();
+                if (node == this->node_list[0]) {
+                    if (ImGui::Combo("Light Model", &material_index, "Absorption Homogeneous\0Absorption Heterogeneous\0Absorption-Emission\0Scattering\0"))
+                    {
+                        switch (material_index)
+                        {
+                        case 0:
+                            node_list[0]->material->shader = Shader::Get("res/shaders/basic.vs", "res/shaders/absorptionmodel.fs");
+                            break;
+
+                        case 1:
+                            node_list[0]->material->shader = Shader::Get("res/shaders/basic.vs", "res/shaders/absorptionheterogeneous.fs");
+                            break;
+
+                        case 2:
+                            node_list[0]->material->shader = Shader::Get("res/shaders/basic.vs", "res/shaders/emission_absorbtion.fs");
+                            break;
+                        
+                        case 3:
+                            node_list[0]->material->shader = Shader::Get("res/shaders/basic.vs", "res/shaders/scattering.fs");
+                            break;
+                        }
+                    }
+                }
+                node->material->renderInMenu();
                 ImGui::TreePop();
             }
         }
+
         ImGui::TreePop();
     }
 }

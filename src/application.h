@@ -15,7 +15,18 @@ public:
 	static Camera* camera;
 	std::vector<SceneNode*> node_list;
 	glm::vec4 ambient_light;
+	glm::vec3 background_color;
 	std::vector<Light*> light_list;
+
+	int material_index;
+
+	FlatMaterial* flat_mat;
+	//AbsorptionModelMaterial *absorption_mat;
+	//AbsorptionHeterogeneous* absorb_het_mat;
+	//EmissionAbsorbtion* emis_absorb_mat;
+	VolumeMaterial* volume_mat;
+
+	int current_task = 0;
 
 	int window_width;
 	int window_height;
