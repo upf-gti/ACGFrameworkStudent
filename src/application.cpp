@@ -24,11 +24,14 @@ void Application::init(GLFWwindow* window)
     this->background_color = glm::vec3(0.1f, 0.1f, 0.1f); //We later send this to the shader
 
 
+
+
     //Initialize materials
     //absorption_mat = new AbsorptionModelMaterial();
     //flat_mat = new FlatMaterial();
     //emis_absorb_mat = new EmissionAbsorbtion(0.5, 0.1);
     //absorb_het_mat = new AbsorptionHeterogeneous();
+    this->material_index = 0;
     volume_mat = new VolumeMaterial(0.5, 0.1);
     volume_mat->loadVDB("res/meshes/bunny_cloud.vdb");
 
@@ -42,6 +45,7 @@ void Application::init(GLFWwindow* window)
 
     // Adding light
     Light*  light_1 = new Light(glm::vec3(3.f), 1.f, glm::vec4(1.f));
+    this->light_list.push_back(light_1);
     
 }
 
@@ -92,13 +96,23 @@ void Application::renderGUI()
             ImGui::TreePop();
         }
 
+        if (ImGui::TreeNode("Lights")) {
+            for (Light* light : this->light_list) {
+                if (ImGui::TreeNode(light->name.c_str())) {
+                    light->renderInMenu();
+                    ImGui::TreePop();
+                }
+            }
+            ImGui::TreePop();
+        }
+
         unsigned int count = 0;
         std::stringstream ss;
         for (auto& node : this->node_list) {
             ss << count;
             if (ImGui::TreeNode(node->name.c_str())) {
                 if (node == this->node_list[0]) {
-                    if (ImGui::Combo("Light Model", &material_index, "Absorption Homogeneous\0Absorption Heterogeneous\0Absorption-Emission\0"))
+                    if (ImGui::Combo("Light Model", &material_index, "Absorption Homogeneous\0Absorption Heterogeneous\0Absorption-Emission\0Scattering\0"))
                     {
                         switch (material_index)
                         {
@@ -112,6 +126,10 @@ void Application::renderGUI()
 
                         case 2:
                             node_list[0]->material->shader = Shader::Get("res/shaders/basic.vs", "res/shaders/emission_absorbtion.fs");
+                            break;
+                        
+                        case 3:
+                            node_list[0]->material->shader = Shader::Get("res/shaders/basic.vs", "res/shaders/scattering.fs");
                             break;
                         }
                     }

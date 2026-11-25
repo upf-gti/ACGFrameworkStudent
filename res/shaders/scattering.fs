@@ -9,11 +9,14 @@ uniform float u_abs_coefficient;
 uniform vec3 u_camera_position;
 uniform float u_step;
 uniform vec3 u_emitted_light;
+uniform vec3 u_camera_origin;
 uniform float u_light_change;
 uniform float u_light_intensity;
 uniform vec3 u_light_position;
 uniform vec4 u_light_color;
 uniform vec3 u_local_light_position;
+uniform float u_scat_coefficient;
+uniform sampler3D u_3D_volume;
 
 out vec4 FragColor; 
 
@@ -112,12 +115,18 @@ float noise(vec3 p, float i){
 
 // MAKE SURE TO CLAMP
 // end of noise function
-
+// Using 3D data instead of random noise
+float noise3Ddata(vec3 pos) {
+	return texture(u_3D_volume, pos).r;
+}
 
 // RAY MARCHING FUNCTIONS
 
 float getAbsorbtion(vec3 pos) {
-	return clamp(snoiseFractal(pos), 0.0, 1.0);
+	//POSITION SHOULD BE IN TEXTURE POSITION
+	pos = clamp(pos, vec3(0.0), vec3(1.0));
+
+	return clamp(noise3Ddata(pos), 0.0, 1.0);
 }
 
 float computeStep(float inter) {
@@ -125,29 +134,37 @@ float computeStep(float inter) {
 }
 
 vec3 getLight(vec3 pos) {
-    float x = clamp(noise(pos), 0.0, 1.0);
+    float x = clamp(noise(pos, u_light_change), 0.0, 1.0);
     return x * u_emitted_light;
 }
 
-vec3 light_pathtacer(vec3 pos, boxMin, boxMax) {
+vec3 light_pathtacer(vec3 p, vec3 boxMin, vec3 boxMax) {
 
-	vec3 wi = normalize(pos - u_light_position);
-    vec2 entry_exit = intersectAABB(u_light_position, wi, boxMin, boxMax);
-	float exit_dist = entry_exit[1];
-    float delta = max(computeStep(exit_dist), 0.01);
+	vec3 to_light = u_local_light_position - p;
+	float light_distance = length(to_light);
+	if (light_distance <= 0.0001) {
+		return u_light_color.rgb * u_light_intensity;
+	}
+
+	vec3 wi = to_light / light_distance;
+    vec2 entry_exit = intersectAABB(p, wi, boxMin, boxMax);
+	float exit_dist = min(entry_exit[1], light_distance);
+    float delta = max(max(computeStep(exit_dist), exit_dist / 4.0), 0.01);
     float i = delta * 0.5;
-	vec3 pos = rayDir * i + rayOrigin;
+	vec3 pos = wi * i + p;
 	float tau = 0.0;
 
     while(i < exit_dist) {
-		float mu_t = getAbsorbtion(pos)*u_abs_coefficient;
+		float density = getAbsorbtion(pos);
+		float mu_t = density * (u_abs_coefficient + u_scat_coefficient);
 		tau += mu_t * delta;
 		i += delta;
-		pos = rayOrigin + rayDir * i;
+		pos = p + wi * i;
 	}
 	float T = exp(-tau);
 
-	vec3 L = u_emitted_light*T;
+	vec3 L = u_light_color.rgb * T * u_light_intensity
+		/ max(light_distance * light_distance, 0.0001);
 	
     return L;
 }
@@ -156,8 +173,8 @@ vec3 light_pathtacer(vec3 pos, boxMin, boxMax) {
 void main()
 {
 	
-	vec3 rayOrigin = u_camera_position;
-	vec3 rayDir = normalize(v_position - u_camera_position);
+	vec3 rayOrigin = u_camera_origin;
+	vec3 rayDir = normalize(v_position - u_camera_origin);
 	vec3 boxMin = vec3(-1.0, -1.0, -1.0); //HARDCODED, GET INFO FROM MESH LATER
 	vec3 boxMax = vec3(1.0, 1.0, 1.0); //HARDCODED, GET INFO FROM MESH LATER
 	vec2 entry_exit = intersectAABB(rayOrigin, rayDir, boxMin, boxMax);
@@ -171,6 +188,7 @@ void main()
 	vec3 pos = rayDir * i + rayOrigin;
 	float tau = 0.0;
     vec3 emission = vec3(0.0);
+	vec3 scatter = vec3(0.0);
 
 	if(exit_dist <= entry_dist){
 		FragColor = vec4(B, 1.0);
@@ -178,13 +196,15 @@ void main()
 	}
 
 	while(i < exit_dist) {
-		float mu_t = getAbsorbtion(pos)*u_abs_coefficient + u_scat_coefficient;
-		i += delta;
-        vec3 Le = getLight(pos);
+		float density = getAbsorbtion(pos);
+		float sigma_a = density * u_abs_coefficient;
+		float sigma_s = density * u_scat_coefficient;
+		float mu_t = sigma_a + sigma_s;
         float T = exp(-tau);
+        emission += T * getLight(pos) * sigma_a * delta;
+        scatter += T * sigma_s * light_pathtacer(pos, boxMin, boxMax) * delta;
         tau += mu_t * delta;
-        emission += T*Le*u_abs_coefficient;
-        scatter += T*u_scat_coefficient*light_pathtacer(pos, boxMin, boxMax);
+		i += delta;
 		pos = rayOrigin + rayDir * i;
 	}
 	float T = exp(-tau);

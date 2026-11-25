@@ -70,6 +70,7 @@ public:
 	float abs_coefficient;
 	Shader* base_shader = NULL;
 	float step;
+	float scat_coefficient = 0.1f;
 	glm::vec3 Le = glm::vec3(0.0);
 
 

@@ -15,6 +15,7 @@ uniform vec3 u_light_position;
 uniform vec4 u_light_color;
 uniform vec3 u_local_light_position;
 uniform float u_scat_coefficient;
+uniform sampler3D u_3D_volume;
 
 out vec4 FragColor; 
 
@@ -114,11 +115,18 @@ float noise(vec3 p, float i){
 // MAKE SURE TO CLAMP
 // end of noise function
 
+// Using 3D data instead of random noise
+float noise3Ddata(vec3 pos) {
+	return texture(u_3D_volume, pos).r;
+}
 
 // RAY MARCHING FUNCTIONS
 
 float getAbsorbtion(vec3 pos) {
-	return clamp(snoiseFractal(pos), 0.0, 1.0);
+	//POSITION SHOULD BE IN TEXTURE POSITION
+	pos = clamp(pos, vec3(0.0), vec3(1.0));
+
+	return clamp(noise3Ddata(pos), 0.0, 1.0);
 }
 
 float computeStep(float inter) {
@@ -158,9 +166,10 @@ void main()
 	while(i < exit_dist) {
 		float mu_t = getAbsorbtion(pos)*u_abs_coefficient;
 		i += delta;
-    vec3 Le = getLight(pos);
-    float T = exp(-tau);
-    emission += T*Le*mu_a*delta;
+    	vec3 Le = getLight(pos);
+ 		float T = exp(-tau);
+    	emission += T*Le*mu_t*delta;
+		tau += mu_t*delta;
 		pos = rayOrigin + rayDir * i;
 	}
 	float T = exp(-tau);
