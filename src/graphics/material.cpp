@@ -201,9 +201,14 @@ void VolumeMaterial::setUniforms(Camera* camera, glm::mat4 model) {
 	this->shader->setUniform("u_mesh_aabbmin", Application::instance->node_list[0]->mesh->aabb_min);
 	this->shader->setUniform("u_mesh_aabbmax", Application::instance->node_list[0]->mesh->aabb_max);
 	this->shader->setUniform3("u_emitted_light", Le);
+	this->shader->setUniform("u_scat_coefficient", this->scat_coefficient);
 
 	// VDB
 	this->shader->setUniform("u_3D_volume", this->texture, 0);
+
+	if (!Application::instance->light_list.empty()) {
+		Application::instance->light_list[0]->setUniforms(this->shader, model);
+	}
 }
 
 void VolumeMaterial::loadVDB(std::string file_path) {
@@ -349,13 +354,14 @@ void VolumeMaterial::renderInMenu()
 		ImGui::SliderFloat("Step size", &this->step, 0, 1);
 	}
 
-	if (this->shader == Shader::Get("res/shaders/basic.vs", "res/shaders/emission_absorbtion.fs")) {
+	bool is_emission_shader = this->shader == Shader::Get("res/shaders/basic.vs", "res/shaders/emission_absorbtion.fs");
+	bool is_scattering_shader = this->shader == Shader::Get("res/shaders/basic.vs", "res/shaders/scattering.fs");
+
+	if (is_emission_shader || is_scattering_shader) {
 		ImGui::ColorEdit3("Emission color", (float*)&this->Le);
 		//ImGui::SliderFloat("Emission noise shift");
 	}
-	if (this->shader == Shader::Get("res/shader/basic.vs", "res/shaders/scattering.fs")) {
-		//ImGui::SliderFloat("Asymmetrical parameter (g)");
-		//ASSYMETRICAL PARAMETER G
-		;
+	if (is_scattering_shader) {
+		ImGui::SliderFloat("Scattering coefficient", &this->scat_coefficient, 0, 4);
 	}
 }
